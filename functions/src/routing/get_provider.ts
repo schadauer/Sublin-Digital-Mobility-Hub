@@ -1,8 +1,5 @@
 import * as admin from 'firebase-admin';
 let activeProviders = new Array();
-const date = new Date();
-const timeNow = parseInt(String(date.getHours()) + String(date.getMinutes()));
-console.log(timeNow);
 
 export async function getProvider(postcode: String): Promise<any> {
     try {
@@ -11,24 +8,33 @@ export async function getProvider(postcode: String): Promise<any> {
             .get();
         querySnapshot.forEach((doc: any) => {
             let data = doc.data();
-            if (doc.exists) {
-                if (data['timeStart'] < timeNow
-                    && data['timeEnd'] > timeNow
+            if (doc.exists && data['stations']) {
+                if (_checkIfStationServed(data['stations'], postcode)
                     && data['inOperation'] === true) {
-                    console.log(doc.data()['timeStart']);
                     let provider = {
                         id: doc.id,
-                        data: doc.data()
+                        name: data['name'],
+                        timeStart: data['timeStart'],
+                        timeEnd: data['timeEnd'],
+                        stations: data['stations']
                     };
                     activeProviders.push(provider);
                 }
-
-
             }
         });
-        console.log(activeProviders);
+        return activeProviders;
     } catch (e) {
         console.log(e);
         return null;
     }
+}
+
+function _checkIfStationServed(stations: Array<String>, postcode: any): boolean {
+    let stationServed = false;
+    stations.forEach((station: String) => {
+        if (station.indexOf(postcode) >= 0) {
+            stationServed = true;
+        }
+    })
+    return stationServed;
 }
