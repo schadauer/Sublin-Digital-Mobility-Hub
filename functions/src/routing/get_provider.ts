@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin';
-let activeProviders = new Array();
+const activeProviders = new Array();
 
 export async function getProvider(postcode: String): Promise<any> {
     try {
@@ -7,11 +7,11 @@ export async function getProvider(postcode: String): Promise<any> {
             .where('postcode', "array-contains", postcode)
             .get();
         querySnapshot.forEach((doc: any) => {
-            let data = doc.data();
+            const data = doc.data();
             if (doc.exists && data['stations']) {
                 if (_checkIfStationServed(data['stations'], postcode)
                     && data['inOperation'] === true) {
-                    let provider = {
+                    const provider = {
                         id: doc.id,
                         name: data['name'],
                         timeStart: data['timeStart'],

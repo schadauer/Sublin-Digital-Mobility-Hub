@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const PLACE_KEY = 'AIzaSyD1z9jbHsjvvd2PZIuiM56of2Go0AA6Lkc';
+const PLACE_KEY = 'AIzaSyDIq5WwJZUG-b_UKlOGaLl4532A9XxY8Lw';
 
 interface PlaceData {
     html_attributions: [];
@@ -10,7 +10,7 @@ interface PlaceData {
 
 export async function getPlace(id: String): Promise<any> {
     try {
-        let response = await axios.get<Promise<PlaceData>>(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&fields=address_components&key=${PLACE_KEY}`);
+        const response = await axios.get<Promise<PlaceData>>(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&fields=address_components&key=${PLACE_KEY}`);
         return (await response.data).result;
     } catch (e) {
         console.log(e);

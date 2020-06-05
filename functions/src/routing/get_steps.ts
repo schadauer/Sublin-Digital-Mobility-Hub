@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-const DIRECTIONS_KEY = 'AIzaSyDQWaWX46aum25L-o5VSjT6R5dVLFbdgS8';
+const DIRECTIONS_KEY = 'AIzaSyDIq5WwJZUG-b_UKlOGaLl4532A9XxY8Lw';
 
-
-export async function getSteps(start: String, end: String, mode: String): Promise<any> {
-    let route = new Array;
+export async function getSteps(start: String, end: String, mode: String, provider: String = ''): Promise<any> {
+    const route = new Array;
     try {
         const address = await axios.get('https://maps.googleapis.com/maps/api/directions/json', {
             params: {
@@ -16,7 +15,7 @@ export async function getSteps(start: String, end: String, mode: String): Promis
                 key: DIRECTIONS_KEY
             }
         })
-        if (mode === 'transit') {
+        if (mode === 'transit' && address.data) {
             address.data.routes[0]['legs'][0]['steps'].map((value: any) => {
                 if (value['transit_details'] && value['travel_mode'] !== 'WALKING') {
                     route.push({
@@ -24,22 +23,22 @@ export async function getSteps(start: String, end: String, mode: String): Promis
                         endAddress: value['transit_details']['arrival_stop']['name'],
                         startTime: value['transit_details']['departure_time']['value'],
                         endTime: value['transit_details']['arrival_time']['value'],
-                        provider: value['transit_details']['line']['short_name']
+                        provider: value['transit_details']['line']['agencies'][0]['name']
                     });
                 }
             })
-        } else if (mode === 'driving') {
+        } else if (mode === 'driving' && address.data) {
             route.push({
                 startAddress: address.data.routes[0]['legs'][0]['start_address'],
                 endAddress: address.data.routes[0]['legs'][0]['end_address'],
-                // startTime: address.data.routes[0]['legs'],
-                // endTime:
-                // provider: address.data.routes[0]['legs']
+                duration: address.data.routes[0]['legs'][0]['duration']['value'],
+                distance: address.data.routes[0]['legs'][0]['distance']['value'],
+                provider: provider,
             })
         }
         return route;
     } catch (e) {
         console.log(e);
+        return null;
     }
-
 }
