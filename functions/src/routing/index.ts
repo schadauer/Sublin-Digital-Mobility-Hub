@@ -4,19 +4,25 @@ import { getPlace } from './get_place';
 import { getProvider } from './get_provider';
 import { getSteps } from './get_steps';
 import { writeRoute } from './write_route';
-import { writeDummyData } from './write_dummy_data';
+// import { writeDummyData } from './write_dummy_data';
 
 
-(async () => {
-    if (process.env.FIRESTORE_EMULATOR_HOST === 'localhost:8080') {
-        await writeDummyData();
-    }
-})();
+// if (process.env.FIRESTORE_EMULATOR_HOST === 'localhost:8080') {
+//     (async (): Promise<void> => {
+//         try {
+//             await writeDummyData();
+//         } catch (e) {
+//             console.log(e);
+//         }
+//     })();
+// }
 
-export const createRouting = functions.firestore.document('/requests/{userId}')
+
+export const createRouting = functions
+    .region('europe-west3')
+    .firestore.document('/requests/{userId}')
     .onWrite(async (change, context) => {
         try {
-
             const data = change.after.data();
             // Let's get the full route
             if (data !== undefined && data['endId'] && data['startId']) {
@@ -32,11 +38,11 @@ export const createRouting = functions.firestore.document('/requests/{userId}')
                     // if multiple providers are available with multiple stations
                     const station: String = provider[0]['stations'][0].substring(5, provider[0]['stations'][0].length);
                     // Get route from startAddress to station
-                    const publicRoute = await getSteps(data['startId'], station, 'transit', context.params.userId);
+                    const publicSteps = await getSteps(data['startId'], station, 'transit', context.params.userId);
                     // Get route from station to endAddress
-                    const sublinRoute = await getSteps(station, data['endId'], 'driving', provider[0].id);
+                    const sublinEndStep = await getSteps(station, data['endId'], 'driving', provider[0].id);
                     // Get route from station to endAddress
-                    await writeRoute(publicRoute, sublinRoute, context.params.userId, provider[0].id);
+                    await writeRoute(publicSteps, sublinEndStep, context.params.userId, provider[0]);
                 }
                 return null;
             } else {

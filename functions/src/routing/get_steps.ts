@@ -17,7 +17,7 @@ export async function getSteps(start: String, end: String, mode: String, provide
         })
         if (mode === 'transit' && address.data) {
             address.data.routes[0]['legs'][0]['steps'].map((value: any) => {
-                if (value['transit_details'] && value['travel_mode'] !== 'WALKING') {
+                if (value['transit_details'] /*&& value['travel_mode'] !== 'WALKING'*/) {
                     route.push({
                         startAddress: value['transit_details']['departure_stop']['name'],
                         endAddress: value['transit_details']['arrival_stop']['name'],

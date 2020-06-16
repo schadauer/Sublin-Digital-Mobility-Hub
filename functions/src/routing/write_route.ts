@@ -1,12 +1,19 @@
 import * as admin from 'firebase-admin';
+import { v4 as uuidv4 } from 'uuid';
 
-export async function writeRoute(publicRoute: Array<any>, sublinRoute: Array<any>, user: string, provider: string): Promise<Array<any>> {
+export async function writeRoute(publicSteps: Array<any>, sublinEndStep: Array<any>, user: string, provider: Map<any, any>): Promise<Array<any>> {
     try {
-        publicRoute.push(sublinRoute[0]);
+        // publicSteps.push(sublinEndStep[0]);
         await admin.firestore().collection('routings').doc(user).set({
-            route: publicRoute,
+            booked: false,
+            confirmed: false,
+            publicSteps: publicSteps,
+            sublinEndStep: sublinEndStep[0],
+            sublinStartStep: null,
             user,
-            provider
+            provider,
+            group: 'passenger',
+            id: uuidv4()
         });
         return [];
     } catch (e) {

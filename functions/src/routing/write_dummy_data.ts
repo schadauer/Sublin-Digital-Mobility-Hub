@@ -1,15 +1,15 @@
 import * as admin from 'firebase-admin';
 
 export async function writeDummyData(): Promise<void> {
-    const user = 'testuser';
-    const provider = 'testprovider';
     try {
+        const user = 'testuser';
+        const provider = 'testprovider';
         const isFilledWithDummyData = await admin.firestore().collection('providers').doc(provider).get().then((data) => {
             return data.data();
         });
         if (!isFilledWithDummyData) {
             await admin.firestore().collection('requests').doc(user).set({
-                startId: 'EiVWaWt0b3ItQWRsZXItTWFya3QsIFdpZW4sIMOWc3RlcnJlaWNoIi4qLAoUChIJGxIHDMWpbUcRo4LIDtGiP90SFAoSCZ_KNlGeB21HEUZbolGK5cL9',
+                startId: 'ChIJ3_D0_NWpbUcRDQF6DKB8gnc',
                 endId: 'Ei5XYWlkaG9mbmVyIFN0cmHDn2UsIFNlaXRlbnN0ZXR0ZW4sIMOWc3RlcnJlaWNoIi4qLAoUChIJZzVT8bA0ckcRreMBlPLjIpcSFAoSCeeHyrW2NHJHEVniceSP_30G',
             });
             await admin.firestore().collection('providers').doc(provider).set({
@@ -26,7 +26,6 @@ export async function writeDummyData(): Promise<void> {
                 timeStart: 600
             });
         }
-
     } catch (e) {
         console.log(e);
     }
