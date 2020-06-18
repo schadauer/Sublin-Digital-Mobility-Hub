@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 const activeProviders = new Array();
 
-export async function getProvider(postcode: String): Promise<any> {
+export async function getProvider(postcode: String): Promise<Array<object>> {
     try {
         const querySnapshot = await admin.firestore().collection('providers')
             .where('postcode', "array-contains", postcode)
@@ -9,6 +9,7 @@ export async function getProvider(postcode: String): Promise<any> {
         querySnapshot.forEach((doc: any) => {
             const data = doc.data();
             if (doc.exists && data['stations']) {
+                // We expect an array of stations with the format XXXX_Name-of-station - XXXX stands for postcode.
                 if (_checkIfStationServed(data['stations'], postcode)
                     && data['inOperation'] === true) {
                     const provider = {
@@ -25,7 +26,7 @@ export async function getProvider(postcode: String): Promise<any> {
         return activeProviders;
     } catch (e) {
         console.log(e);
-        return null;
+        return [];
     }
 }
 

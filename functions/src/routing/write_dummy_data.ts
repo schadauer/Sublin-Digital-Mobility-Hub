@@ -10,7 +10,10 @@ export async function writeDummyData(): Promise<void> {
         if (!isFilledWithDummyData) {
             await admin.firestore().collection('requests').doc(user).set({
                 startId: 'ChIJ3_D0_NWpbUcRDQF6DKB8gnc',
-                endId: 'Ei5XYWlkaG9mbmVyIFN0cmHDn2UsIFNlaXRlbnN0ZXR0ZW4sIMOWc3RlcnJlaWNoIi4qLAoUChIJZzVT8bA0ckcRreMBlPLjIpcSFAoSCeeHyrW2NHJHEVniceSP_30G',
+                //Weg 8, Krenstetten
+                endId: 'ChIJfwNwxKg1ckcRKRtFoViJtwc'
+                //Waidhofner Straße 
+                //endId: 'Ei5XYWlkaG9mbmVyIFN0cmHDn2UsIFNlaXRlbnN0ZXR0ZW4sIMOWc3RlcnJlaWNoIi4qLAoUChIJZzVT8bA0ckcRreMBlPLjIpcSFAoSCeeHyrW2NHJHEVniceSP_30G',
             });
             await admin.firestore().collection('providers').doc(provider).set({
                 addresses: ['Lisec'],

@@ -1,23 +1,27 @@
 import * as admin from 'firebase-admin';
 import { v4 as uuidv4 } from 'uuid';
 
-export async function writeRoute(publicSteps: Array<any>, sublinEndStep: Array<any>, user: string, provider: Map<any, any>): Promise<Array<any>> {
+export async function writeRoute(publicSteps: Array<any>, sublinEndStep: object, user: string, provider: object, addressComponents: Array<any>): Promise<void> {
     try {
-        // publicSteps.push(sublinEndStep[0]);
-        await admin.firestore().collection('routings').doc(user).set({
-            booked: false,
-            confirmed: false,
-            publicSteps: publicSteps,
-            sublinEndStep: sublinEndStep[0],
-            sublinStartStep: null,
-            user,
-            provider,
-            group: 'passenger',
-            id: uuidv4()
-        });
-        return [];
+        if (Object.keys(provider).length) {
+            await admin.firestore().collection('routings').doc(user).set({
+                booked: false,
+                confirmed: false,
+                publicSteps: publicSteps || [],
+                sublinEndStep: sublinEndStep || {},
+                sublinStartStep: {},
+                user,
+                provider: provider || {},
+                group: 'passenger',
+                id: uuidv4()
+            });
+        } else if (!Object.keys(provider).length && addressComponents.length) {
+            await admin.firestore().collection('routings').doc(user).set({
+                unavailableAddress: addressComponents
+            });
+        }
     } catch (e) {
         console.log(e)
-        return [];
+
     }
 }

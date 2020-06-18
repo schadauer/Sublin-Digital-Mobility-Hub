@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const DIRECTIONS_KEY = 'AIzaSyDIq5WwJZUG-b_UKlOGaLl4532A9XxY8Lw';
 
-export async function getSteps(start: String, end: String, mode: String, provider: String = ''): Promise<any> {
+export async function getSteps(start: string, end: string, mode: string, provider: string = '', sublinStartTime: number = 0): Promise<any> {
     const route = new Array;
     try {
         const address = await axios.get('https://maps.googleapis.com/maps/api/directions/json', {
@@ -33,7 +33,9 @@ export async function getSteps(start: String, end: String, mode: String, provide
                 endAddress: address.data.routes[0]['legs'][0]['end_address'],
                 duration: address.data.routes[0]['legs'][0]['duration']['value'],
                 distance: address.data.routes[0]['legs'][0]['distance']['value'],
-                provider: provider,
+                startTime: sublinStartTime,
+                endTime: sublinStartTime + address.data.routes[0]['legs'][0]['duration']['value'] + 300,
+                provider,
             })
         }
         return route;

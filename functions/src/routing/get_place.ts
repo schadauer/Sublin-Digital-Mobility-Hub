@@ -8,13 +8,13 @@ interface PlaceData {
     status: String;
 }
 
-export async function getPlace(id: String): Promise<any> {
+export async function getPlace(id: String): Promise<object> {
     try {
-        const response = await axios.get<Promise<PlaceData>>(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&fields=address_components&key=${PLACE_KEY}`);
+        const response = await axios.get<Promise<PlaceData>>(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${PLACE_KEY}`);
         return (await response.data).result;
     } catch (e) {
         console.log(e);
-        return null;
+        return {};
     }
 }
 
