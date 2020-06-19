@@ -5,19 +5,19 @@ import { getProvider } from './get_provider';
 import { getSteps } from './get_steps';
 import { writeRoute } from './write_route';
 import { getAddressDetails, AddressDetails } from './get_address_details';
-import { getAddressComponentsValues } from '../utils/get_address_components_values';
-// For test data --- Begin ---
-import { writeDummyData } from './write_dummy_data';
 
-if (process.env.FIRESTORE_EMULATOR_HOST === 'localhost:8080') {
-    (async (): Promise<void> => {
-        try {
-            await writeDummyData();
-        } catch (e) {
-            console.log(e);
-        }
-    })();
-}
+// For test data --- Begin ---
+// import { writeDummyData } from './write_dummy_data';
+
+// if (process.env.FIRESTORE_EMULATOR_HOST === 'localhost:8080') {
+//     (async (): Promise<void> => {
+//         try {
+//             await writeDummyData();
+//         } catch (e) {
+//             console.log(e);
+//         }
+//     })();
+// }
 // For test data --- End ---
 
 export const createRouting = functions
@@ -30,12 +30,9 @@ export const createRouting = functions
             if (data !== undefined && data['endId'] && data['startId']) {
                 // Let's check if a provider is available for postcode
                 const addressGooglePlaceData: object = await getPlace(data['endId']);
-                const addressComponents: Array<object> = addressGooglePlaceData['address_components'];
+                //const addressComponents: Array<object> = addressGooglePlaceData['address_components'];
                 const addressDetails: AddressDetails = getAddressDetails(addressGooglePlaceData)
-                const postcode: string = addressDetails.postcode;
-                const provider: Array<object> = await getProvider(postcode);
-
-                console.log(addressDetails);
+                const provider: Array<object> = await getProvider(addressDetails.postcode);
 
 
                 // If a provider is available
@@ -50,11 +47,11 @@ export const createRouting = functions
                     // Write it to /routings in the database
                     const sublinEndStep: Array<any> = await getSteps(station, data['endId'], 'driving', provider[0]['id'], startTime);
                     // Get route from station to endAddress
-                    await writeRoute(publicSteps, sublinEndStep[0], context.params.userId, provider[0], []);
+                    await writeRoute(publicSteps, sublinEndStep[0], context.params.userId, provider[0], [], data['startId'], data['endId']);
                 } else {
                     // If no provider is available we provide information about the location
                     // Information about the postcode and the city
-                    await writeRoute([], [], context.params.userId, {}, addressComponents);
+                    await writeRoute([], [], context.params.userId, {}, addressDetails, data['startId'], data['endId']);
                 }
                 return null;
             } else {

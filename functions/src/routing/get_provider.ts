@@ -1,8 +1,9 @@
 import * as admin from 'firebase-admin';
-const activeProviders = new Array();
+
 
 export async function getProvider(postcode: String): Promise<Array<object>> {
     try {
+        const activeProviders = new Array();
         const querySnapshot = await admin.firestore().collection('providers')
             .where('postcode', "array-contains", postcode)
             .get();
