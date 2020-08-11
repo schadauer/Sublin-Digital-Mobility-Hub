@@ -1,10 +1,10 @@
 import * as admin from 'firebase-admin';
 
-export async function writeBooking(sublineEndStep: Map<any, any>, providerId: string, id: string): Promise<Array<any>> {
+export async function writeBooking(sublinEndStep: Map<any, any>, providerId: string, id: string): Promise<Array<any>> {
     try {
         console.log('writing');
         await admin.firestore().collection('booking').doc(providerId).collection('open').doc(id).set({
-            sublineEndStep,
+            sublinEndStep,
             // id
         });
         return [];

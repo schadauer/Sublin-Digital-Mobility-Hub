@@ -1,4 +1,4 @@
-import { COMPANY, NUMBER, STREET, CITY, COUNTRY, STATION } from '../types/delimiter';
+import { NUMBER, STREET, CITY, COUNTRY, STATION } from '../types/delimiter';
 
 export function getNextDelimiter(delimiter: string): string {
     var nextDelimiter;

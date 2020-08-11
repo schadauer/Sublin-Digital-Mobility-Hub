@@ -1,9 +1,12 @@
 import { getPartOfFormattedAddress } from '../utils/get_part_of_formatted_address';
-import { COMPANY, NUMBER, STREET, CITY, COUNTRY, STATION } from '../types/delimiter';
+import { NUMBER, STREET, COMPANY } from '../types/delimiter';
 
 export function getAddressesQueryArray(formattedAddress: string): Array<string> {
-    var addressesArray = new Array();
-    if (getPartOfFormattedAddress(formattedAddress, NUMBER) !== '') {
+    let addressesArray = new Array();
+    if (getPartOfFormattedAddress(formattedAddress, COMPANY) !== '') {
+        console.log('Its a Comp');
+        addressesArray = [formattedAddress, formattedAddress.substring(0, formattedAddress.indexOf(COMPANY)), formattedAddress.substring(0, formattedAddress.indexOf(STREET))];
+    } else if (getPartOfFormattedAddress(formattedAddress, NUMBER) !== '') {
         addressesArray = [formattedAddress, formattedAddress.substring(0, formattedAddress.indexOf(NUMBER)), formattedAddress.substring(0, formattedAddress.indexOf(STREET))];
     } else if (getPartOfFormattedAddress(formattedAddress, STREET) !== '') {
         addressesArray = [formattedAddress, formattedAddress.substring(0, formattedAddress.indexOf(STREET))];

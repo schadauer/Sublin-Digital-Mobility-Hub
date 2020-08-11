@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const DIRECTIONS_KEY = 'AIzaSyDIq5WwJZUG-b_UKlOGaLl4532A9XxY8Lw';
 
-export async function getSteps(start: string, end: string, mode: string, provider: string = '', sublinStartTime: number = 0): Promise<any> {
+export async function getSteps(start: string, end: string, mode: string, sublinStartTime: number = 0, provider: object): Promise<any> {
     const route = new Array;
     try {
         const address = await axios.get('https://maps.googleapis.com/maps/api/directions/json', {
