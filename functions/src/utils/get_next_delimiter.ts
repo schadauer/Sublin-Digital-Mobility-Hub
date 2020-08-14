@@ -1,7 +1,7 @@
 import { NUMBER, STREET, CITY, COUNTRY, STATION } from '../types/delimiter';
 
 export function getNextDelimiter(delimiter: string): string {
-    var nextDelimiter;
+    let nextDelimiter;
     switch (delimiter) {
         case NUMBER:
             nextDelimiter = STREET;

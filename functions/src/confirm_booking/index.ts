@@ -8,7 +8,7 @@ export const createConfirmBooking = functions
         try {
             const after = change.after.data();
             if (after !== undefined) {
-                if (after.sublinEndStep !== undefined && after.sublinEndStep !== null && after.sublinEndStep.confirmed !== undefined && after.sublinEndStep.confirmed == true) {
+                if (after.sublinEndStep !== undefined && after.sublinEndStep !== null && after.sublinEndStep.confirmed !== undefined && after.sublinEndStep.confirmed === true) {
                     const sublinEndStep = after.sublinEndStep;
                     sublinEndStep.confirmedTime = Date.now();
                     await writeConfirmedBooking(sublinEndStep, sublinEndStep.provider.id, context.params.docId);
