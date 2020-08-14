@@ -10,16 +10,16 @@ import { getPartOfFormattedAddress } from '../utils/get_part_of_formatted_addres
 
 // For test data --- Begin ---
 
-// import { writeDummyData } from './write_dummy_data';
-// if (process.env.FIRESTORE_EMULATOR_HOST === 'localhost:8080') {
-//     (async (): Promise<void> => {
-//         try {
-//             await writeDummyData();
-//         } catch (e) {
-//             console.log(e);
-//         }
-//     })();
-// }
+import { writeDummyData } from './write_dummy_data';
+if (process.env.FIRESTORE_EMULATOR_HOST === 'localhost:8080') {
+    (async (): Promise<void> => {
+        try {
+            await writeDummyData();
+        } catch (e) {
+            console.log(e);
+        }
+    })();
+}
 
 // For test data --- End ---
 

@@ -8,7 +8,9 @@ export const createBooking = functions
         try {
             const after = change.after.data();
             if (after !== undefined && after.booked !== undefined && after.booked === true) {
-                if (after.sublinEndStep !== undefined && after.provider !== undefined && after.provider.id !== undefined) {
+                if (after.sublinEndStep !== undefined && after.sublinEndStep !== null && after.provider !== undefined && after.provider.id !== undefined) {
+                    const sublinEndStep = after.sublinEndStep;
+                    sublinEndStep.bookedTime = Date.now();
                     await writeBooking(after.sublinEndStep, after.provider.id, after.id);
                 }
 

@@ -177,7 +177,7 @@ export async function writeDummyData(): Promise<void> {
             await admin.firestore().collection('booking').doc(taxi).set({
                 test: 'test',
             });
-            await timeout(2000);
+            await timeout(5000);
             await admin.firestore().collection('routings').doc(user + 'toWaidhofnerStrasse6').set({
                 booked: true,
                 id: 'testId',

@@ -11,8 +11,6 @@ export const checkProviderStatus = functions
                 console.log(context.params.userId);
                 await updateUser(true, context.params.userId);
             }
-
-
         } catch (e) {
             console.log(e);
         }

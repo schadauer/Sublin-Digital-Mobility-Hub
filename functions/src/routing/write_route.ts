@@ -6,7 +6,6 @@ export async function writeRoute(publicSteps: Array<any>, sublinEndStep: object,
         if (Object.keys(provider).length) {
             await admin.firestore().collection(checkAddress ? 'check' : 'routings').doc(user).set({
                 booked: false,
-                confirmed: false,
                 publicSteps: publicSteps || null,
                 sublinEndStep: sublinEndStep || null,
                 endAddress: endAddress,

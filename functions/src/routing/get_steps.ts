@@ -30,6 +30,9 @@ export async function getSteps(start: string, end: string, mode: string, sublinS
         } else if (mode === 'driving' && address.data) {
             route.push({
                 confirmed: false,
+                confirmedTime: null,
+                bookedTime: null,
+                completedTime: null,
                 startAddress: address.data.routes[0]['legs'][0]['start_address'],
                 endAddress: address.data.routes[0]['legs'][0]['end_address'],
                 duration: address.data.routes[0]['legs'][0]['duration']['value'],
