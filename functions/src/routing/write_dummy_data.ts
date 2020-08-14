@@ -11,8 +11,6 @@ export async function writeDummyData(): Promise<void> {
             return data.data();
         });
         if (!isFilledWithDummyData) {
-
-
             await admin.firestore().collection('providers').doc(taxiShuttle).set({
                 addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STREET + 'Peter-Lisec-Straße' + COMPANY + 'LISEC Austria GmbH'],
                 inOperation: true,
@@ -140,6 +138,12 @@ export async function writeDummyData(): Promise<void> {
                 requestedAddresses: [],
                 secondNmae: '',
             });
+            await admin.firestore().collection('requests').doc(user + 'toWaidhofnerStrasse6').set({
+                startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
+                startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
+                endId: 'ChIJk52Sx7A0ckcR1syxXIdjlUU',
+                endAddress: '__COU__AT__CIT__Seitenstetten__STR__Waidhofner Str.__NUM__6',
+            });
             await admin.firestore().collection('requests').doc(user + 'toLisec').set({
                 startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
                 startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
@@ -170,14 +174,34 @@ export async function writeDummyData(): Promise<void> {
                 endId: 'ChIJZVPm8bk0ckcRfFWwE8ZENzY',
                 endAddress: '__COU__AT__CIT__Seitenstetten__STR__Am Klosterberg__COM__Stift Seitenstetten',
             });
-            await admin.firestore().collection('requests').doc(user + 'toWaidhofnerStrasse6').set({
-                startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
-                startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
-                endId: 'ChIJk52Sx7A0ckcR1syxXIdjlUU',
-                endAddress: '__COU__AT__CIT__Seitenstetten__STR__Waidhofner Str.__NUM__6',
+            await admin.firestore().collection('booking').doc(taxi).set({
+                test: 'test',
             });
+            await timeout(2000);
+            await admin.firestore().collection('routings').doc(user + 'toWaidhofnerStrasse6').set({
+                booked: true,
+                id: 'testId',
+            }, {
+                merge: true,
+            })
+            await timeout(5000);
+            await admin.firestore().collection('booking').doc(taxi).collection('open').doc('testId').set({
+                sublinEndStep: {
+                    confirmed: true,
+                }
+            }, {
+                merge: true,
+            })
+            // await admin.firestore().collection('booking').doc(taxi).collection('open').doc('test').set({
+            //     test: 'test',
+            // });
         }
     } catch (e) {
         console.log(e);
+
     }
+}
+
+function timeout(ms: any) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

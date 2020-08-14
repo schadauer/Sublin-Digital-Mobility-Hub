@@ -11,7 +11,6 @@ import { getPartOfFormattedAddress } from '../utils/get_part_of_formatted_addres
 // For test data --- Begin ---
 
 // import { writeDummyData } from './write_dummy_data';
-
 // if (process.env.FIRESTORE_EMULATOR_HOST === 'localhost:8080') {
 //     (async (): Promise<void> => {
 //         try {
@@ -36,7 +35,6 @@ export const createRouting = functions
                 //const addressGooglePlaceData: object = await getPlace(data['endId']);
                 //const addressDetails: AddressDetails = getAddressDetails(addressGooglePlaceData)
                 const provider: Array<object> = await getProvider(data['endAddress'], context.params.userId);
-
                 // If a provider is available
                 if (provider.length) {
                     // Needs refactoring:

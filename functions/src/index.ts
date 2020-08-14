@@ -5,3 +5,4 @@ admin.initializeApp();
 export { createRouting } from './routing/index';
 export { createBooking } from './booking/index';
 export { checkProviderStatus } from './provider/index';
+export { createConfirmBooking } from './confirm_booking/index';

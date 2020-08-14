@@ -6,7 +6,6 @@ export const checkProviderStatus = functions
     .firestore.document('/providers/{userId}')
     .onUpdate(async (change, context) => {
         try {
-
             const data = change.after.data();
             if (data !== undefined) {
                 console.log(context.params.userId);
