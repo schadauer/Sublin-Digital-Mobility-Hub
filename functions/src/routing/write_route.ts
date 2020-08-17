@@ -1,30 +1,29 @@
 import * as admin from 'firebase-admin';
 import { v4 as uuidv4 } from 'uuid';
 
-export async function writeRoute(publicSteps: Array<any>, sublinEndStep: object, user: string, provider: object, addressComponents: object, startId: string, startAddress: string, endId: string, endAddress: string, checkAddress: boolean = false): Promise<void> {
+export async function writeRoute(publicSteps: Array<any>, sublinStartStep: object, sublinEndStep: object, user: string, startId: string, startAddress: string, endId: string, endAddress: string, checkAddress: boolean = false): Promise<void> {
     try {
-        if (Object.keys(provider).length) {
+        if (Object.keys(sublinStartStep).length || Object.keys(sublinEndStep).length) {
             await admin.firestore().collection(checkAddress ? 'check' : 'routings').doc(user).set({
                 booked: false,
                 publicSteps: publicSteps || null,
-                sublinEndStep: sublinEndStep || null,
-                endAddress: endAddress,
-                endAddressAvailable: true,
-                sublinStartStep: null,
+                sublinEndStep: sublinEndStep || {},
+                sublinStartStep: sublinStartStep || {},
                 user,
-                provider: provider || null,
                 group: 'passenger',
-                startId,
                 startAddress,
+                startId,
                 endId,
+                endAddress,
+                endAddressAvailable: Object.keys(sublinEndStep).length !== 0,
+                startAddressAvailable: Object.keys(sublinStartStep).length !== 0,
                 id: uuidv4(),
             });
-        } else if (!Object.keys(provider).length) {
+        } else {
             await admin.firestore().collection(checkAddress ? 'check' : 'routings').doc(user).set({
                 user,
                 // endAddress: addressComponents,
                 endAddressAvailable: false,
-                provider: null,
                 startId,
                 startAddress,
                 endId,

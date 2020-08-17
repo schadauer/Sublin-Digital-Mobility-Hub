@@ -8,7 +8,6 @@ export const checkProviderStatus = functions
         try {
             const data = change.after.data();
             if (data !== undefined) {
-                console.log(context.params.userId);
                 await updateUser(true, context.params.userId);
             }
         } catch (e) {

@@ -9,7 +9,7 @@ export async function getProvider(formattedAddress: string, userId: string): Pro
     const email = await _getUserEmaiAddresses(userId);
     const selectedProviders = activeProviders.filter((provider) => {
         if (provider['providerPlan'] === ProviderPlan.emailOnly) {
-            console.log(provider['targetGroup'].indexOf(email) !== -1);
+            // console.log(provider['targetGroup'].indexOf(email) !== -1);
             return (provider['targetGroup'].indexOf(email) !== -1);
         } else {
             return true
@@ -20,14 +20,12 @@ export async function getProvider(formattedAddress: string, userId: string): Pro
 
 async function _getProviders(formattedAddress: string): Promise<Array<object>> {
     try {
-        console.log(getAddressesQueryArray(formattedAddress));
         const activeProviders = new Array();
         const querySnapshot = await admin.firestore().collection('providers')
             .where('addresses', "array-contains-any", getAddressesQueryArray(formattedAddress))
             .get();
         querySnapshot.forEach((doc: any) => {
             const data = doc.data();
-            console.log(data);
             if (doc.exists && data['stations']) {
                 // We expect an array of stations with the format XXXX_Name-of-station - XXXX stands for postcode.
                 // if (_checkIfStationServed(data['stations'], getPartOfFormattedAddress(formattedAddress, CITY))

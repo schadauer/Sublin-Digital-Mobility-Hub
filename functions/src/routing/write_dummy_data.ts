@@ -84,6 +84,20 @@ export async function writeDummyData(): Promise<void> {
                 timeEnd: 2200,
                 timeStart: 600
             });
+            await admin.firestore().collection('providers').doc(ownShuttle + 'DasGoldberg').set({
+                addresses: [COUNTRY + 'AT' + CITY + 'Bad Hofgastein' + STREET + 'Haltestellenweg' + NUMBER + '23'],
+                inOperation: true,
+                operationRequested: true,
+                providerName: 'Das Goldberg',
+                providerPlan: 'ownShuttle',
+                providerType: ownShuttle,
+                targetGroup: [],
+                partners: [],
+                outOfWork: false,
+                stations: [COUNTRY + 'AT' + CITY + 'Bad Hofgastein' + STATION + 'Bahnhof Hofgastein'],
+                timeEnd: 2200,
+                timeStart: 600
+            });
             await admin.firestore().collection('users').doc(user + 'toLisec').set({
                 email: 'andreas@simpledesign.io',
                 firstName: 'Andreas',
@@ -129,6 +143,15 @@ export async function writeDummyData(): Promise<void> {
                 requestedAddresses: [],
                 secondNmae: '',
             });
+            await admin.firestore().collection('users').doc(user + 'fromStifttoVienna').set({
+                email: 'andreas@simpledesign.io',
+                firstName: 'Andreas',
+                homeAddress: 'Viktorgasse',
+                isProfileComplete: false,
+                isProvider: true,
+                requestedAddresses: [],
+                secondNmae: '',
+            });
             await admin.firestore().collection('users').doc(user + 'toWaidhofnerStrasse6').set({
                 email: 'andreas@simpledesign.io',
                 firstName: 'Andreas',
@@ -138,12 +161,28 @@ export async function writeDummyData(): Promise<void> {
                 requestedAddresses: [],
                 secondNmae: '',
             });
+            await admin.firestore().collection('users').doc(user + 'fromWaidhofnerStrasse6toGoldberg').set({
+                email: 'andreas@simpledesign.io',
+                firstName: 'Andreas',
+                homeAddress: 'VSeitenstetten',
+                isProfileComplete: false,
+                isProvider: true,
+                requestedAddresses: [],
+                secondNmae: '',
+            });
+
+
+
+
+
+
             await admin.firestore().collection('requests').doc(user + 'toWaidhofnerStrasse6').set({
                 startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
                 startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
                 endId: 'ChIJk52Sx7A0ckcR1syxXIdjlUU',
                 endAddress: '__COU__AT__CIT__Seitenstetten__STR__Waidhofner Str.__NUM__6',
             });
+
             await admin.firestore().collection('requests').doc(user + 'toLisec').set({
                 startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
                 startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
@@ -174,6 +213,18 @@ export async function writeDummyData(): Promise<void> {
                 endId: 'ChIJZVPm8bk0ckcRfFWwE8ZENzY',
                 endAddress: '__COU__AT__CIT__Seitenstetten__STR__Am Klosterberg__COM__Stift Seitenstetten',
             });
+            await admin.firestore().collection('requests').doc(user + 'fromStifttoVienna').set({
+                startId: 'ChIJZVPm8bk0ckcRfFWwE8ZENzY',
+                startAddress: '__COU__AT__CIT__Seitenstetten__STR__Am Klosterberg__COM__Stift Seitenstetten',
+                endId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
+                endAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
+            });
+            await admin.firestore().collection('requests').doc(user + 'fromWaidhofnerStrasse6toGoldberg').set({
+                startId: 'ChIJk52Sx7A0ckcR1syxXIdjlUU',
+                startAddress: '__COU__AT__CIT__Seitenstetten__STR__Waidhofner Str.__NUM__6',
+                endId: 'ChIJg7yvfMs6d0cRrCEyewfZix8',
+                endAddress: '__COU__AT__CIT__Bad Hofgastein__STR__Haltestellenweg__NUM__23',
+            });
             await admin.firestore().collection('booking').doc(taxi).set({
                 test: 'test',
             });
@@ -198,7 +249,6 @@ export async function writeDummyData(): Promise<void> {
         }
     } catch (e) {
         console.log(e);
-
     }
 }
 
