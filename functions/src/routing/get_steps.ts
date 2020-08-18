@@ -10,7 +10,7 @@ export async function getSteps(start: string, end: string, mode: string, sublinS
                 origin: start.indexOf(' ') >= 0 ? start : `place_id:${start}`,
                 destination: end.indexOf(' ') >= 0 ? end : `place_id:${end}`,
                 mode: mode,
-                transit_mode: mode === 'transit' ? 'train|tram|subway' : 'driving',
+                transit_mode: mode === 'transit' ? 'train|tram|subway|bus' : 'driving',
                 language: 'de',
                 key: DIRECTIONS_KEY
             }

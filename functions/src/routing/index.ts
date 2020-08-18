@@ -7,7 +7,7 @@ import { writeRoute } from './write_route';
 // import { getAddressDetails, AddressDetails } from './get_address_details';
 import { STATION } from '../types/delimiter';
 import { getPartOfFormattedAddress } from '../utils/get_part_of_formatted_address';
-import { isExcludedAddress } from './is_excluded_address';
+import { isPubliclyAccessible } from './is_publicly_accessible';
 
 // For test data --- Begin ---
 
@@ -35,11 +35,13 @@ export const createRouting = functions
                 // Let's check if a provider is available for the end address
                 //const addressGooglePlaceData: object = await getPlace(data['endId']);
                 //const addressDetails: AddressDetails = getAddressDetails(addressGooglePlaceData)
-                const isExcludedStartAddress = isExcludedAddress(data['endAddress']);
-                const isExcludedEndAddress = isExcludedAddress(data['startAddress']);
+                const isPubliclyAccessibleEndAddress: boolean = isPubliclyAccessible(data['endAddress']);
+                const isPubliclyAccessibleStartAddress: boolean = isPubliclyAccessible(data['startAddress']);
+                console.log(isPubliclyAccessibleEndAddress);
+                console.log(isPubliclyAccessibleStartAddress);
                 // const provider: Array<object> = await getProvider(data['endAddress'], context.params.userId);
-                const providerForStartAddress: Array<object> = (isExcludedStartAddress === false) ? await getProvider(data['startAddress'], context.params.userId) : [];
-                const providerForEndAddress: Array<object> = (isExcludedEndAddress === false) ? await getProvider(data['endAddress'], context.params.userId) : [];
+                const providerForStartAddress: Array<object> = (isPubliclyAccessibleStartAddress === false) ? await getProvider(data['startAddress'], context.params.userId) : [];
+                const providerForEndAddress: Array<object> = (isPubliclyAccessibleEndAddress === false) ? await getProvider(data['endAddress'], context.params.userId) : [];
                 let sublinEndStep: Array<any> = [{}];
                 let sublinStartStep: Array<any> = [{}];
                 let stationForStartAddress: string = '';
@@ -86,11 +88,11 @@ export const createRouting = functions
                         sublinStartStep = await getSteps(data['startId'], stationForStartAddress, 'driving', startTimeForStartAddress, providerForStartAddress[0]);
                         sublinEndStep = await getSteps(stationForEndAddress, data['endId'], 'driving', startTimeForEndAddress, providerForEndAddress[0]);
                     }
-                    await writeRoute(publicSteps, sublinStartStep[0], sublinEndStep[0], context.params.userId, data['startId'], data['startAddress'], data['endId'], data['endAddress'], data['checkAddress']);
+                    await writeRoute(publicSteps, sublinStartStep[0], sublinEndStep[0], context.params.userId, data['startId'], data['startAddress'], data['endId'], data['endAddress'], data['checkAddress'], isPubliclyAccessibleStartAddress, isPubliclyAccessibleEndAddress,);
                 } else {
                     // If no provider is available we provide information about the location
                     // Information about the postcode and the city
-                    await writeRoute([], [], [], context.params.userId, data['startId'], data['startAddress'], data['endId'], data['endAddress'], data['checkAddress']);
+                    await writeRoute([], [], [], context.params.userId, data['startId'], data['startAddress'], data['endId'], data['endAddress'], data['checkAddress'], isPubliclyAccessibleStartAddress, isPubliclyAccessibleEndAddress,);
                 }
                 return null;
             } else {

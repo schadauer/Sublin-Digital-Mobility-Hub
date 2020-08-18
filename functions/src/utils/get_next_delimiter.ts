@@ -1,19 +1,17 @@
-import { NUMBER, STREET, CITY, COUNTRY, STATION } from '../types/delimiter';
+import { NUMBER, STREET, CITY, COUNTRY } from '../types/delimiter';
 
 export function getNextDelimiter(delimiter: string): string {
     let nextDelimiter;
     switch (delimiter) {
-        case NUMBER:
-            nextDelimiter = STREET;
-            break;
-        case STREET:
+        case COUNTRY:
             nextDelimiter = CITY;
             break;
         case CITY:
-            nextDelimiter = COUNTRY;
+            nextDelimiter = STREET;
             break;
-        case COUNTRY:
-            nextDelimiter = STATION
+        case STREET:
+            nextDelimiter = NUMBER;
+            break;
         default:
             return ''
     }
