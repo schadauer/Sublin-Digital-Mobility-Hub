@@ -2,7 +2,7 @@ import * as admin from 'firebase-admin';
 
 admin.initializeApp();
 //export { admin };
-export { createRouting } from './routing/index';
-export { createBooking } from './booking/index';
-export { checkProviderStatus } from './provider/index';
-export { createConfirmBooking } from './confirm_booking/index';
+export { createRouting } from './routings/index';
+export { createBooking } from './bookings/index';
+export { checkProviderStatus } from './providers/index';
+export { createConfirmBooking } from './confirmed_bookings/index';

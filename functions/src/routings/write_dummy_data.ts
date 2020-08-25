@@ -171,11 +171,6 @@ export async function writeDummyData(): Promise<void> {
                 secondNmae: '',
             });
 
-
-
-
-
-
             await admin.firestore().collection('requests').doc(user + 'toWaidhofnerStrasse6').set({
                 startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
                 startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
@@ -225,7 +220,10 @@ export async function writeDummyData(): Promise<void> {
                 endId: 'ChIJg7yvfMs6d0cRrCEyewfZix8',
                 endAddress: '__COU__AT__CIT__Bad Hofgastein__STR__Haltestellenweg__NUM__23',
             });
-            await admin.firestore().collection('booking').doc(taxi).set({
+            await admin.firestore().collection('bookings').doc(taxi).set({
+                test: 'test',
+            });
+            await admin.firestore().collection('confirmedBookings').doc(taxi).set({
                 test: 'test',
             });
             await timeout(5000);
@@ -236,7 +234,7 @@ export async function writeDummyData(): Promise<void> {
                 merge: true,
             })
             await timeout(5000);
-            await admin.firestore().collection('booking').doc(taxi).collection('open').doc('testId').set({
+            await admin.firestore().collection('bookings').doc(taxi).collection('open').doc(user + 'toWaidhofnerStrasse6').set({
                 sublinEndStep: {
                     confirmed: true,
                 }

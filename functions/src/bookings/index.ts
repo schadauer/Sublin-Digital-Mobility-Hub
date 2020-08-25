@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
-import { writeBooking } from './write_booking';
+import { writeBooking } from './write_bookings';
 
 export const createBooking = functions
     .region('europe-west3')
@@ -12,12 +12,12 @@ export const createBooking = functions
                 if (after.sublinEndStep !== undefined && after.sublinEndStep !== null && after.sublinEndStep.provider !== undefined && after.sublinEndStep.provider.id !== undefined) {
                     const sublinEndStep = after.sublinEndStep;
                     sublinEndStep.bookedTime = timeNow;
-                    await writeBooking(null, after.sublinEndStep, null, after.sublinEndStep.provider.id, after.id);
+                    await writeBooking(null, after.sublinEndStep, null, after.sublinEndStep.provider.id, after.id, context.params.userId);
                 }
                 if (after.sublinStartStep !== undefined && after.sublinStartStep !== null && after.sublinStartStep.provider !== undefined && after.sublinStartStep.provider.id !== undefined) {
                     const sublinStartStep = after.sublinStartStep;
                     sublinStartStep.bookedTime = timeNow;
-                    await writeBooking(after.sublinStartStep, null, after.sublinStartStep.provider.id, null, after.id);
+                    await writeBooking(after.sublinStartStep, null, after.sublinStartStep.provider.id, null, after.id, context.params.userId);
                 }
             }
         } catch (e) {

@@ -3,7 +3,7 @@ import { writeConfirmedBooking } from './write_confirmed_booking';
 
 export const createConfirmBooking = functions
     .region('europe-west3')
-    .firestore.document('/booking/{userId}/open/{docId}')
+    .firestore.document('/bookings/{providerId}/open/{userId}')
     .onUpdate(async (change, context) => {
         try {
             const after = change.after.data();
@@ -11,7 +11,7 @@ export const createConfirmBooking = functions
                 if (after.sublinEndStep !== undefined && after.sublinEndStep !== null && after.sublinEndStep.confirmed !== undefined && after.sublinEndStep.confirmed === true) {
                     const sublinEndStep = after.sublinEndStep;
                     sublinEndStep.confirmedTime = Date.now();
-                    await writeConfirmedBooking(sublinEndStep, sublinEndStep.provider.id, context.params.docId);
+                    await writeConfirmedBooking(sublinEndStep, context.params.providerId, context.params.userId);
                 }
             }
         } catch (e) {
