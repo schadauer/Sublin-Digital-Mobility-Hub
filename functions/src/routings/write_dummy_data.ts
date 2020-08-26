@@ -223,7 +223,7 @@ export async function writeDummyData(): Promise<void> {
             await admin.firestore().collection('bookings').doc(taxi).set({
                 test: 'test',
             });
-            await admin.firestore().collection('confirmedBookings').doc(taxi).set({
+            await admin.firestore().collection('bookings').doc(taxi).set({
                 test: 'test',
             });
             await timeout(5000);

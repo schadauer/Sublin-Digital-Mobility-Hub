@@ -37,8 +37,8 @@ export const createRouting = functions
                 //const addressDetails: AddressDetails = getAddressDetails(addressGooglePlaceData)
                 const isPubliclyAccessibleEndAddress: boolean = isPubliclyAccessible(data['endAddress']);
                 const isPubliclyAccessibleStartAddress: boolean = isPubliclyAccessible(data['startAddress']);
-                console.log(isPubliclyAccessibleEndAddress);
-                console.log(isPubliclyAccessibleStartAddress);
+                // console.log(isPubliclyAccessibleEndAddress);
+                // console.log(isPubliclyAccessibleStartAddress);
                 // const provider: Array<object> = await getProvider(data['endAddress'], context.params.userId);
                 const providerForStartAddress: Array<object> = (isPubliclyAccessibleStartAddress === false) ? await getProvider(data['startAddress'], context.params.userId) : [];
                 const providerForEndAddress: Array<object> = (isPubliclyAccessibleEndAddress === false) ? await getProvider(data['endAddress'], context.params.userId) : [];

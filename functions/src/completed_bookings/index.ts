@@ -8,7 +8,7 @@ export const createCompletedBooking = functions
         try {
             const after = change.after.data();
             if (after !== undefined) {
-                if (after.sublinEndStep !== undefined && after.sublinEndStep !== null && after.sublinEndStep.c !== undefined && after.sublinEndStep.confirmed === true) {
+                if (after.sublinEndStep !== undefined && after.sublinEndStep !== null && after.sublinEndStep.confirmed !== undefined && after.sublinEndStep.confirmed === true) {
                     const sublinEndStep = after.sublinEndStep;
                     sublinEndStep.confirmedTime = Date.now();
                     await writeCompletedBooking(sublinEndStep, context.params.providerId, context.params.userId);
