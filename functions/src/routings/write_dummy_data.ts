@@ -52,7 +52,7 @@ export async function writeDummyData(): Promise<void> {
                 targetGroup: [],
                 partners: [],
                 outOfWork: false,
-                stations: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STATION + 'Bahnhof St.Peter Seitenstetten'],
+                stations: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STATION + 'Bahnhof St.Peter Seitenstetten' + COUNTRY + 'AT' + CITY + 'Seitenstetten'],
                 timeEnd: 2200,
                 timeStart: 600
             });
@@ -66,7 +66,7 @@ export async function writeDummyData(): Promise<void> {
                 targetGroup: [],
                 partners: [],
                 outOfWork: false,
-                stations: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STATION + 'Bahnhof St.Peter Seitenstetten'],
+                stations: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STATION + 'Bahnhof St.Peter Seitenstetten' + COUNTRY + 'AT' + CITY + 'Seitenstetten'],
                 timeEnd: 2200,
                 timeStart: 600
             });
@@ -80,7 +80,7 @@ export async function writeDummyData(): Promise<void> {
                 targetGroup: ['andreas@simpledesign.io'],
                 partners: [],
                 outOfWork: false,
-                stations: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STATION + 'Bahnhof St.Peter Seitenstetten'],
+                stations: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STATION + 'Bahnhof St.Peter Seitenstetten' + COUNTRY + 'AT' + CITY + 'Seitenstetten'],
                 timeEnd: 2200,
                 timeStart: 600
             });

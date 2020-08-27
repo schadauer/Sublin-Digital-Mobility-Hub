@@ -2,13 +2,19 @@ import axios from 'axios';
 
 const DIRECTIONS_KEY = 'AIzaSyDIq5WwJZUG-b_UKlOGaLl4532A9XxY8Lw';
 
-export async function getSteps(start: string, end: string, mode: string, sublinStartTime: number = 0, provider: object): Promise<any> {
+export async function getSteps(
+    startAddress: string,
+    endAddress: string,
+    mode: string,
+    sublinStartTime: number = 0,
+    provider: object,
+): Promise<any> {
     const route = new Array;
     try {
         const address = await axios.get('https://maps.googleapis.com/maps/api/directions/json', {
             params: {
-                origin: start.indexOf(' ') >= 0 ? start : `place_id:${start}`,
-                destination: end.indexOf(' ') >= 0 ? end : `place_id:${end}`,
+                origin: startAddress,
+                destination: endAddress,
                 mode: mode,
                 transit_mode: mode === 'transit' ? 'train|tram|subway|bus' : 'driving',
                 language: 'de',
@@ -31,11 +37,15 @@ export async function getSteps(start: string, end: string, mode: string, sublinS
             route.push({
                 confirmed: false,
                 completed: false,
+                noShow: false,
+                noShowTime: null,
                 confirmedTime: null,
                 bookedTime: null,
                 completedTime: null,
-                startAddress: address.data.routes[0]['legs'][0]['start_address'],
-                endAddress: address.data.routes[0]['legs'][0]['end_address'],
+                // startAddress: address.data.routes[0]['legs'][0]['start_address'],
+                // endAddress: address.data.routes[0]['legs'][0]['end_address'],
+                startAddress: startAddress,
+                endAddress: endAddress,
                 duration: address.data.routes[0]['legs'][0]['duration']['value'],
                 distance: address.data.routes[0]['legs'][0]['distance']['value'],
                 startTime: sublinStartTime,

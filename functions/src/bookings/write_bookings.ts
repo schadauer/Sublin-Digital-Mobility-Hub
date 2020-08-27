@@ -9,7 +9,7 @@ export async function writeBooking(sublinStartStep: Map<any, any> | null, sublin
                 bookingId,
                 userId,
             });
-        if (sublinEndStep != null && endStepProviderId !== null)
+        if (sublinEndStep !== null && endStepProviderId !== null)
             await admin.firestore().collection('bookings').doc(endStepProviderId).collection('open').doc(userId).set({
                 sublinEndStep,
                 bookingId,

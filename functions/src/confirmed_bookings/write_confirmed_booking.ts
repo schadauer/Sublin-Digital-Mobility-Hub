@@ -4,6 +4,7 @@ export async function writeConfirmedBooking(sublinEndStep: Map<any, any>, provid
     try {
         await admin.firestore().collection('bookings').doc(providerId).collection('confirmed').doc(userId).set({
             sublinEndStep,
+            userId
         });
         await admin.firestore().collection('bookings').doc(providerId).collection('open').doc(userId).delete();
         await admin.firestore().collection('routings').doc(userId).update({
