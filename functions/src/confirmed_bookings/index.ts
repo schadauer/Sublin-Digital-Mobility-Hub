@@ -7,13 +7,35 @@ export const createConfirmBooking = functions
     .onUpdate(async (change, context) => {
         try {
             const after = change.after.data();
+
             if (after !== undefined) {
-                if (after.sublinEndStep !== undefined && after.sublinEndStep !== null && after.sublinEndStep.confirmed !== undefined && after.sublinEndStep.confirmed === true) {
-                    const sublinEndStep = after.sublinEndStep;
+                let sublinStartStep;
+                let sublinEndStep;
+                if (after.sublinEndStep !== undefined
+                    && after.sublinEndStep !== null
+                    && after.sublinEndStep.confirmed !== undefined
+                    && after.sublinEndStep.confirmed === true) {
+                    sublinEndStep = after.sublinEndStep;
                     sublinEndStep.confirmedTime = Date.now();
-                    await writeConfirmedBooking(sublinEndStep, context.params.providerId, context.params.userId);
                 }
+                if (after.sublinStartStep !== undefined
+                    && after.sublinStartStep !== null
+                    && after.sublinStartStep.confirmed !== undefined
+                    && after.sublinStartStep.confirmed === true) {
+                    sublinStartStep = after.sublinStartStep;
+                    sublinStartStep.confirmedTime = Date.now();
+                }
+
+                console.log(sublinEndStep);
+                console.log(sublinStartStep);
+                // sublinStartStep = sublinStartStep ?? {};
+                // sublinEndStep = sublinEndStep ?? {};
+                // console.log(sublinEndStep);
+                // console.log(sublinStartStep);
+                await writeConfirmedBooking(sublinStartStep, sublinEndStep, context.params.providerId, context.params.userId, after.bookingId);
             }
+
+
         } catch (e) {
             console.log(e);
         }

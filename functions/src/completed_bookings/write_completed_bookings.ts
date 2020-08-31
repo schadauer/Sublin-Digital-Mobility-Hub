@@ -1,15 +1,35 @@
 import * as admin from 'firebase-admin';
 
-export async function writeCompletedBooking(sublinEndStep: Map<any, any>, providerId: string, userId: string): Promise<Array<any>> {
+export async function writeCompletedBooking(sublinStartStep: Map<any, any> | {}, sublinEndStep: Map<any, any> | {}, data: FirebaseFirestore.DocumentData, providerId: string, userId: string, bookingId: string): Promise<Array<any>> {
     try {
-        await admin.firestore().collection('bookings').doc(providerId).collection('confirmed').doc(userId).set({
-            sublinEndStep,
-            userId,
+        if (sublinEndStep) {
+            await admin.firestore().collection('bookings').doc(providerId).collection('completed').doc(bookingId).set({
+                sublinEndStep,
+                userId,
+            });
+            await admin.firestore().collection('routings').doc(userId).set({
+                sublinEndStep,
+            }, { merge: true });
+        }
+
+        if (sublinStartStep) {
+            await admin.firestore().collection('bookings').doc(providerId).collection('completed').doc(bookingId).set({
+                sublinStartStep,
+                userId,
+            });
+            await admin.firestore().collection('routings').doc(userId).set({
+                sublinStartStep,
+            }, { merge: true });
+        }
+
+
+        await admin.firestore().collection('bookings').doc(providerId).collection('confirmed').doc(userId).delete();
+        await admin.firestore().collection('users').doc(userId).collection('archive').doc(bookingId).set({
+            ...data
         });
-        await admin.firestore().collection('bookings').doc(providerId).collection('open').doc(userId).delete();
-        await admin.firestore().collection('routings').doc(userId).update({
-            sublinEndStep,
-        })
+
+
+        // await admin.firestore().collection('routings').doc(userId).delete();
         return [];
     } catch (e) {
         console.log(e)

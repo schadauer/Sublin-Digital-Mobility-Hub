@@ -6,7 +6,8 @@ export async function getSteps(
     startAddress: string,
     endAddress: string,
     mode: string,
-    sublinStartTime: number = 0,
+    startTime: number | null = 0,
+    endTime: number | null = 0,
     provider: object,
 ): Promise<any> {
     const route = new Array;
@@ -48,8 +49,8 @@ export async function getSteps(
                 endAddress: endAddress,
                 duration: address.data.routes[0]['legs'][0]['duration']['value'],
                 distance: address.data.routes[0]['legs'][0]['distance']['value'],
-                startTime: sublinStartTime,
-                endTime: sublinStartTime + address.data.routes[0]['legs'][0]['duration']['value'] + 300,
+                startTime: startTime,
+                endTime: endTime + address.data.routes[0]['legs'][0]['duration']['value'] + 300,
                 provider,
             })
         }

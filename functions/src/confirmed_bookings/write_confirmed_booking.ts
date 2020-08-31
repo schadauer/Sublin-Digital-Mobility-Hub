@@ -1,15 +1,30 @@
 import * as admin from 'firebase-admin';
 
-export async function writeConfirmedBooking(sublinEndStep: Map<any, any>, providerId: string, userId: string): Promise<Array<any>> {
+export async function writeConfirmedBooking(sublinStartStep: Map<any, any> | {}, sublinEndStep: Map<any, any> | {}, providerId: string, userId: string, bookingId: string): Promise<Array<any>> {
     try {
-        await admin.firestore().collection('bookings').doc(providerId).collection('confirmed').doc(userId).set({
-            sublinEndStep,
-            userId
-        });
+        if (sublinEndStep) {
+            console.log(sublinEndStep)
+            await admin.firestore().collection('bookings').doc(providerId).collection('confirmed').doc(userId).set({
+                sublinEndStep,
+                userId,
+                bookingId,
+            });
+            await admin.firestore().collection('routings').doc(userId).set({
+                sublinEndStep,
+            }, { merge: true })
+        }
+        if (sublinStartStep) {
+            console.log(sublinStartStep)
+            await admin.firestore().collection('bookings').doc(providerId).collection('confirmed').doc(userId).set({
+                sublinStartStep,
+                userId,
+                bookingId,
+            });
+            await admin.firestore().collection('routings').doc(userId).set({
+                sublinStartStep,
+            }, { merge: true })
+        }
         await admin.firestore().collection('bookings').doc(providerId).collection('open').doc(userId).delete();
-        await admin.firestore().collection('routings').doc(userId).update({
-            sublinEndStep,
-        })
         return [];
     } catch (e) {
         console.log(e)

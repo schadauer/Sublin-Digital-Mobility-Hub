@@ -226,6 +226,9 @@ export async function writeDummyData(): Promise<void> {
             await admin.firestore().collection('bookings').doc(taxi).set({
                 test: 'test',
             });
+            await admin.firestore().collection('routings').doc(taxi).collection('archive').doc('testId').set({
+                test: 'test',
+            });
             await timeout(5000);
             await admin.firestore().collection('routings').doc(user + 'toWaidhofnerStrasse6').set({
                 booked: true,
@@ -233,7 +236,7 @@ export async function writeDummyData(): Promise<void> {
             }, {
                 merge: true,
             })
-            await timeout(5000);
+            await timeout(10000);
             await admin.firestore().collection('bookings').doc(taxi).collection('open').doc(user + 'toWaidhofnerStrasse6').set({
                 sublinEndStep: {
                     confirmed: true,
@@ -241,9 +244,17 @@ export async function writeDummyData(): Promise<void> {
             }, {
                 merge: true,
             })
-            // await admin.firestore().collection('booking').doc(taxi).collection('open').doc('test').set({
-            //     test: 'test',
-            // });
+            await timeout(10000);
+            await admin.firestore().collection('bookings').doc(taxi).collection('confirmed').doc(user + 'toWaidhofnerStrasse6').set({
+                sublinEndStep: {
+                    completed: true,
+                }
+            }, {
+                merge: true,
+            })
+            await admin.firestore().collection('booking').doc(taxi).collection('open').doc('test').set({
+                test: 'test',
+            });
         }
     } catch (e) {
         console.log(e);
