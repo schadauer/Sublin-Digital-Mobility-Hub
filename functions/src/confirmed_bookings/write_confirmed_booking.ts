@@ -24,7 +24,8 @@ export async function writeConfirmedBooking(sublinStartStep: Map<any, any> | {},
                 sublinStartStep,
             }, { merge: true })
         }
-        await admin.firestore().collection('bookings').doc(providerId).collection('open').doc(userId).delete();
+        if (sublinEndStep || sublinStartStep)
+            await admin.firestore().collection('bookings').doc(providerId).collection('open').doc(userId).delete();
         return [];
     } catch (e) {
         console.log(e)

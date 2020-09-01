@@ -22,11 +22,12 @@ export async function writeCompletedBooking(sublinStartStep: Map<any, any> | {},
             }, { merge: true });
         }
 
-
-        await admin.firestore().collection('bookings').doc(providerId).collection('confirmed').doc(userId).delete();
-        await admin.firestore().collection('users').doc(userId).collection('archive').doc(bookingId).set({
-            ...data
-        });
+        if (sublinEndStep || sublinStartStep) {
+            await admin.firestore().collection('bookings').doc(providerId).collection('confirmed').doc(userId).delete();
+            await admin.firestore().collection('users').doc(userId).collection('archive').doc(bookingId).set({
+                ...data
+            });
+        }
 
 
         // await admin.firestore().collection('routings').doc(userId).delete();
