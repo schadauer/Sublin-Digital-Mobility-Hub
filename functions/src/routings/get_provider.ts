@@ -48,8 +48,8 @@ export async function getProvider(formattedAddress: string, userId: string): Pro
 
 async function _getTaxiAsPartner(partnerId: string): Promise<any> {
     try {
-        const dataPartner = await admin.firestore().collection('providers').doc(partnerId).get();
-        return dataPartner.data();
+        const doc = await admin.firestore().collection('providers').doc(partnerId).get();
+        return _getProviderfromJson(doc);
     } catch (e) {
         console.log(e)
         return {};
@@ -62,7 +62,7 @@ async function _getShuttles(formattedAddress: string): Promise<Array<object>> {
             .where('addresses', "array-contains-any", getAddressesQueryArray(formattedAddress))
             .where('providerType', '==', 'shuttle')
             .get();
-        return _getMapFromJson(querySnapshot);
+        return _getProvidersFromJson(querySnapshot);
     } catch (e) {
         console.log(e);
         return [];
@@ -75,16 +75,16 @@ async function _getSponsors(formattedAddress: string): Promise<Array<object>> {
             .where('addresses', "array-contains-any", getAddressesQueryArray(formattedAddress))
             .where('providerType', '==', 'sponsor')
             .get();
-        return _getMapFromJson(querySnapshot);
+        return _getProvidersFromJson(querySnapshot);
     } catch (e) {
         console.log(e);
         return [];
     }
 }
 
-function _getMapFromJson(querySnapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>): Array<object> {
+function _getProvidersFromJson(querySnapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>): Array<object> {
     const activeProviders = new Array();
-    querySnapshot.forEach((doc: any) => {
+    querySnapshot.forEach((doc: FirebaseFirestore.DocumentData) => {
         // console.log(doc);
         let data = doc.data();
         // if (doc.exists && data['stations']) {
@@ -94,23 +94,29 @@ function _getMapFromJson(querySnapshot: FirebaseFirestore.QuerySnapshot<Firebase
             if (data['inOperation'] === true
                 // && data['isTaxi'] === true
             ) {
-                const provider = {
-                    id: doc.id,
-                    providerName: data['providerName'],
-                    timeStart: data['timeStart'],
-                    timeEnd: data['timeEnd'],
-                    stations: data['stations'],
-                    addresses: data['addresses'],
-                    providerType: data['providerType'],
-                    providerPlan: data['providerPlan'],
-                    targetGroup: data['targetGroup'],
-                    partners: data['partners']
-                };
-                activeProviders.push(provider);
+                activeProviders.push(_getProviderfromJson(doc));
             }
         }
     });
     return activeProviders;
+}
+
+function _getProviderfromJson(doc: FirebaseFirestore.DocumentData): object {
+    const data = doc.data();
+    const provider = {
+        id: doc.id,
+        providerName: data['providerName'],
+        timeStart: data['timeStart'],
+        timeEnd: data['timeEnd'],
+        stations: data['stations'],
+        addresses: data['addresses'],
+        providerType: data['providerType'],
+        providerPlan: data['providerPlan'],
+        targetGroup: data['targetGroup'],
+        partners: data['partners']
+    };
+    return provider;
+
 }
 
 async function _getUserEmaiAddresses(userId: string): Promise<string> {

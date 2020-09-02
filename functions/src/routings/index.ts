@@ -46,6 +46,7 @@ export const createRouting = functions
                 let publicSteps: Array<any> = [];
                 let startTimeForStartAddress: number;
                 let startTimeForEndAddress: number;
+                console.log(providerForEndAddress);
 
                 // If a provider is available
                 if (providerForEndAddress.length || providerForStartAddress.length) {
@@ -57,6 +58,7 @@ export const createRouting = functions
                     }
                     if (providerForEndAddress.length) {
                         stationForEndAddress = getPartOfFormattedAddress(providerForEndAddress[0]['stations'][0], STATION);
+
                     }
 
                     // If Sublin is only required for the the beginning of the trip
