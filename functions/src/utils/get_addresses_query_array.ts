@@ -1,6 +1,6 @@
 import { getPartOfFormattedAddress } from '../utils/get_part_of_formatted_address';
 import { NUMBER, STREET, COMPANY } from '../types/delimiter';
-
+// We get an array of the address -> from city only until the full address
 export function getAddressesQueryArray(formattedAddress: string): Array<string> {
     let addressesArray = new Array();
     if (getPartOfFormattedAddress(formattedAddress, COMPANY) !== '') {

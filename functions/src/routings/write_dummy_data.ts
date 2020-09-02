@@ -5,40 +5,41 @@ export async function writeDummyData(): Promise<void> {
     try {
         const user = 'testuser';
         const taxi = 'taxi';
-        const ownShuttle = 'ownShuttle';
-        const taxiShuttle = 'taxiShuttle';
+        const shuttle = 'shuttle';
+        const sponsor = 'sponsor';
+        // const taxiShuttle = 'taxiShuttle';
         const isFilledWithDummyData = await admin.firestore().collection('providers').doc(taxi).get().then((data) => {
             return data.data();
         });
         if (!isFilledWithDummyData) {
-            await admin.firestore().collection('providers').doc(taxiShuttle).set({
+            await admin.firestore().collection('providers').doc(sponsor).set({
                 addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STREET + 'Peter-Lisec-Straße' + COMPANY + 'LISEC Austria GmbH'],
                 inOperation: true,
                 operationRequested: true,
-                providerName: 'Lisec',
+                providerName: 'Lisec Seitenstetten',
                 providerPlan: 'emailOnly',
-                providerType: taxiShuttle,
+                providerType: sponsor,
                 targetGroup: ['andreas@simpledesign.io'],
-                partners: ['taxi'],
+                partners: [taxi],
                 outOfWork: false,
                 stations: [],
                 timeEnd: 2200,
                 timeStart: 600
             });
-            await admin.firestore().collection('providers').doc(taxiShuttle).set({
-                addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STREET + 'Peter-Lisec-Straße' + COMPANY + 'LISEC Austria GmbH'],
-                inOperation: true,
-                operationRequested: true,
-                providerName: 'Lisec',
-                providerPlan: 'emailOnly',
-                providerType: taxiShuttle,
-                targetGroup: ['andreas@simpledesign.io'],
-                partners: ['taxi'],
-                outOfWork: false,
-                stations: [],
-                timeEnd: 2200,
-                timeStart: 600
-            });
+            // await admin.firestore().collection('providers').doc(taxiShuttle).set({
+            //     addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STREET + 'Peter-Lisec-Straße' + COMPANY + 'LISEC Austria GmbH'],
+            //     inOperation: true,
+            //     operationRequested: true,
+            //     providerName: 'Lisec',
+            //     providerPlan: 'emailOnly',
+            //     providerType: taxiShuttle,
+            //     targetGroup: ['andreas@simpledesign.io'],
+            //     partners: ['taxi'],
+            //     outOfWork: false,
+            //     stations: [],
+            //     timeEnd: 2200,
+            //     timeStart: 600
+            // });
             await admin.firestore().collection('providers').doc(taxi).set({
                 addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STREET + 'Waidhofner Straße' + NUMBER + '6',
                 COUNTRY + 'AT' + CITY + 'Seitenstetten' + STREET + 'Waidhofner Straße',
@@ -50,19 +51,19 @@ export async function writeDummyData(): Promise<void> {
                 providerPlan: 'all',
                 providerType: taxi,
                 targetGroup: [],
-                partners: [],
+                partners: [sponsor],
                 outOfWork: false,
                 stations: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STATION + 'Bahnhof St.Peter Seitenstetten' + COUNTRY + 'AT' + CITY + 'Seitenstetten'],
                 timeEnd: 2200,
                 timeStart: 600
             });
-            await admin.firestore().collection('providers').doc(ownShuttle).set({
+            await admin.firestore().collection('providers').doc(shuttle).set({
                 addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STREET + 'Am Klosterberg' + COMPANY + 'Stift Seitenstetten'],
                 inOperation: true,
                 operationRequested: true,
                 providerName: 'Stift Seitenstetten',
                 providerPlan: 'all',
-                providerType: ownShuttle,
+                providerType: shuttle,
                 targetGroup: [],
                 partners: [],
                 outOfWork: false,
@@ -70,13 +71,13 @@ export async function writeDummyData(): Promise<void> {
                 timeEnd: 2200,
                 timeStart: 600
             });
-            await admin.firestore().collection('providers').doc(ownShuttle + 'Hausmening').set({
+            await admin.firestore().collection('providers').doc(shuttle + 'Hausmening').set({
                 addresses: [COUNTRY + 'AT' + CITY + 'Hausmening' + STREET + 'Bahnhofstraße' + COMPANY + 'LISEC Holding GmbH'],
                 inOperation: true,
                 operationRequested: true,
                 providerName: 'Lisec Hausmening',
                 providerPlan: 'emailOnly',
-                providerType: ownShuttle,
+                providerType: shuttle,
                 targetGroup: ['andreas@simpledesign.io'],
                 partners: [],
                 outOfWork: false,
@@ -84,17 +85,31 @@ export async function writeDummyData(): Promise<void> {
                 timeEnd: 2200,
                 timeStart: 600
             });
-            await admin.firestore().collection('providers').doc(ownShuttle + 'DasGoldberg').set({
+            await admin.firestore().collection('providers').doc(shuttle + 'DasGoldberg').set({
                 addresses: [COUNTRY + 'AT' + CITY + 'Bad Hofgastein' + STREET + 'Haltestellenweg' + NUMBER + '23'],
                 inOperation: true,
                 operationRequested: true,
                 providerName: 'Das Goldberg',
-                providerPlan: 'ownShuttle',
-                providerType: ownShuttle,
+                providerPlan: 'all',
+                providerType: shuttle,
                 targetGroup: [],
                 partners: [],
                 outOfWork: false,
                 stations: [COUNTRY + 'AT' + CITY + 'Bad Hofgastein' + STATION + 'Bahnhof Hofgastein'],
+                timeEnd: 2200,
+                timeStart: 600
+            });
+            await admin.firestore().collection('providers').doc(sponsor + 'GemeindeSeitenstetten').set({
+                addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten'],
+                inOperation: true,
+                operationRequested: true,
+                providerName: 'Gemeinde Seitenstetten',
+                providerPlan: 'all',
+                providerType: sponsor,
+                targetGroup: [],
+                partners: [taxi],
+                outOfWork: false,
+                stations: [],
                 timeEnd: 2200,
                 timeStart: 600
             });
@@ -236,25 +251,25 @@ export async function writeDummyData(): Promise<void> {
             }, {
                 merge: true,
             })
-            await timeout(10000);
-            await admin.firestore().collection('bookings').doc(taxi).collection('open').doc(user + 'toWaidhofnerStrasse6').set({
-                sublinEndStep: {
-                    confirmed: true,
-                }
-            }, {
-                merge: true,
-            })
-            await timeout(10000);
-            await admin.firestore().collection('bookings').doc(taxi).collection('confirmed').doc(user + 'toWaidhofnerStrasse6').set({
-                sublinEndStep: {
-                    completed: true,
-                }
-            }, {
-                merge: true,
-            })
-            await admin.firestore().collection('booking').doc(taxi).collection('open').doc('test').set({
-                test: 'test',
-            });
+            // await timeout(10000);
+            // await admin.firestore().collection('bookings').doc(taxi).collection('open').doc(user + 'toWaidhofnerStrasse6').set({
+            //     sublinEndStep: {
+            //         confirmed: true,
+            //     }
+            // }, {
+            //     merge: true,
+            // })
+            // await timeout(10000);
+            // await admin.firestore().collection('bookings').doc(taxi).collection('confirmed').doc(user + 'toWaidhofnerStrasse6').set({
+            //     sublinEndStep: {
+            //         completed: true,
+            //     }
+            // }, {
+            //     merge: true,
+            // })
+            // await admin.firestore().collection('booking').doc(taxi).collection('open').doc('test').set({
+            //     test: 'test',
+            // });
         }
     } catch (e) {
         console.log(e);
