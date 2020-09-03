@@ -1,16 +1,31 @@
 import * as admin from 'firebase-admin';
 // import { getPartOfFormattedAddress } from '../utils/get_part_of_formatted_address';
 import { getAddressesQueryArray } from '../utils/get_addresses_query_array';
-import { ProviderPlan } from '../types/provider_plan';
+// import { ProviderPlan } from '../types/provider_plan';
 import { getPartOfFormattedAddress } from '../utils/get_part_of_formatted_address';
-import { CITY, NUMBER, STREET } from '../types/delimiter';
+import { CITY, STREET } from '../types/delimiter';
 // import { COMPANY, NUMBER, STREET, CITY, COUNTRY, STATION } from '../types/delimiter';
 
 export async function getProvider(formattedAddress: string, userId: string): Promise<Array<object>> {
+    const userEmail = await _getUserEmaiAddresses(userId);
     const shuttles = await _getShuttles(formattedAddress);
     const sponsors = await _getSponsors(formattedAddress);
-    const shuttlesAndSponsors = [...shuttles, ...sponsors];
+    let shuttlesAndSponsors = [...shuttles, ...sponsors];
     let selectedProvider: object | null = null;
+
+    // We need to remove those providers that have a target group set (emailOnly)
+    shuttlesAndSponsors = shuttlesAndSponsors.filter((provider) => {
+        if (provider['providerPlan'] !== null
+            && provider['providerPlan'] === 'emailOnly'
+            && provider['targetGroup'] !== null
+        ) {
+            return provider['targetGroup'].includes(userEmail);
+        } else if (provider['providerPlan'] !== null
+            && provider['providerPlan'] === 'all')
+            return true;
+        else
+            return false;
+    })
 
     // Now we check which address is the closest starting with the house number
     shuttlesAndSponsors.forEach((provider) => {
@@ -37,8 +52,13 @@ export async function getProvider(formattedAddress: string, userId: string): Pro
             });
         })
     }
+    // No we need to get the taxi provider for the sponsors
     if (selectedProvider !== null && selectedProvider['providerType'] === 'sponsor') {
-        selectedProvider = await _getTaxiAsPartner(selectedProvider['partners'][0])
+        const sponsor = selectedProvider;
+        selectedProvider = await _getTaxiAsPartner(selectedProvider['partners'][0]);
+        if (selectedProvider !== null)
+            selectedProvider['sponsor'] = sponsor;
+
     }
     if (selectedProvider !== null)
         return [selectedProvider];
@@ -85,7 +105,6 @@ async function _getSponsors(formattedAddress: string): Promise<Array<object>> {
 function _getProvidersFromJson(querySnapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>): Array<object> {
     const activeProviders = new Array();
     querySnapshot.forEach((doc: FirebaseFirestore.DocumentData) => {
-        // console.log(doc);
         let data = doc.data();
         // if (doc.exists && data['stations']) {
         if (doc.exists) {

@@ -11,16 +11,16 @@ import { isPubliclyAccessible } from './is_publicly_accessible';
 
 // For test data --- Begin ---
 
-import { writeDummyData } from './write_dummy_data';
-if (process.env.FIRESTORE_EMULATOR_HOST === 'localhost:8080') {
-    (async (): Promise<void> => {
-        try {
-            await writeDummyData();
-        } catch (e) {
-            console.log(e);
-        }
-    })();
-}
+// import { writeDummyData } from './write_dummy_data';
+// if (process.env.FIRESTORE_EMULATOR_HOST === 'localhost:8080') {
+//     (async (): Promise<void> => {
+//         try {
+//             await writeDummyData();
+//         } catch (e) {
+//             console.log(e);
+//         }
+//     })();
+// }
 
 // For test data --- End ---
 
@@ -46,7 +46,7 @@ export const createRouting = functions
                 let publicSteps: Array<any> = [];
                 let startTimeForStartAddress: number;
                 let startTimeForEndAddress: number;
-                console.log(providerForEndAddress);
+
 
                 // If a provider is available
                 if (providerForEndAddress.length || providerForStartAddress.length) {

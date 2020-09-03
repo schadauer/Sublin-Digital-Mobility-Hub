@@ -99,14 +99,28 @@ export async function writeDummyData(): Promise<void> {
                 timeEnd: 2200,
                 timeStart: 600
             });
-            await admin.firestore().collection('providers').doc(sponsor + 'GemeindeSeitenstetten').set({
+            await admin.firestore().collection('providers').doc(sponsor + 'GemeindeSeitenstettenAll').set({
                 addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten'],
                 inOperation: true,
                 operationRequested: true,
-                providerName: 'Gemeinde Seitenstetten',
+                providerName: 'Gemeinde Seitenstetten All',
                 providerPlan: 'all',
                 providerType: sponsor,
                 targetGroup: [],
+                partners: [taxi],
+                outOfWork: false,
+                stations: [],
+                timeEnd: 2200,
+                timeStart: 600
+            });
+            await admin.firestore().collection('providers').doc(sponsor + 'GemeindeSeitenstettenEmailOnly').set({
+                addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten'],
+                inOperation: true,
+                operationRequested: true,
+                providerName: 'Gemeinde Seitenstetten Email Only',
+                providerPlan: 'emailOnly',
+                providerType: sponsor,
+                targetGroup: ['andreas@simpledesign.io'],
                 partners: [taxi],
                 outOfWork: false,
                 stations: [],
