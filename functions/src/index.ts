@@ -7,3 +7,4 @@ export { createBooking } from './bookings/index';
 export { checkProviderStatus } from './providers/index';
 export { createConfirmBooking } from './confirmed_bookings/index';
 export { createCompletedBooking } from './completed_bookings';
+export { updateUserProfileFunction } from './update_user_profile';

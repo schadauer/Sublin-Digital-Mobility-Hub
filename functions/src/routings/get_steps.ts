@@ -52,6 +52,7 @@ export async function getSteps(
                 startTime: startTime,
                 endTime: endTime + address.data.routes[0]['legs'][0]['duration']['value'] + 300,
                 provider,
+                sponsor: provider['sponsor'] ?? null,
             })
         }
         return route;

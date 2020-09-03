@@ -39,6 +39,7 @@ export const createRouting = functions
                 const isPubliclyAccessibleStartAddress: boolean = isPubliclyAccessible(data['startAddress']);
                 const providerForStartAddress: Array<object> = (isPubliclyAccessibleStartAddress === false) ? await getProvider(data['startAddress'], context.params.userId) : [];
                 const providerForEndAddress: Array<object> = (isPubliclyAccessibleEndAddress === false) ? await getProvider(data['endAddress'], context.params.userId) : [];
+
                 let sublinEndStep: Array<any> = [{}];
                 let sublinStartStep: Array<any> = [{}];
                 let stationForStartAddress: string = '';
@@ -84,6 +85,7 @@ export const createRouting = functions
                             providerForStartAddress[0],
                         );
                     }
+
                     // If Sublin is only required for the end of the trip
                     if (providerForEndAddress.length && !providerForStartAddress.length) {
                         console.log('Sublin End Address');
