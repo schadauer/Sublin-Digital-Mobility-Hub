@@ -15,7 +15,7 @@ import { isPubliclyAccessible } from './is_publicly_accessible';
 // if (process.env.FIRESTORE_EMULATOR_HOST === 'localhost:8080') {
 //     (async (): Promise<void> => {
 //         try {
-//             await writeDummyData();
+//             void writeDummyData();
 //         } catch (e) {
 //             console.log(e);
 //         }
@@ -37,8 +37,8 @@ export const createRouting = functions
                 //const addressDetails: AddressDetails = getAddressDetails(addressGooglePlaceData)
                 const isPubliclyAccessibleEndAddress: boolean = isPubliclyAccessible(data['endAddress']);
                 const isPubliclyAccessibleStartAddress: boolean = isPubliclyAccessible(data['startAddress']);
-                const providerForStartAddress: Array<object> = (isPubliclyAccessibleStartAddress === false) ? await getProvider(data['startAddress'], context.params.userId) : [];
-                const providerForEndAddress: Array<object> = (isPubliclyAccessibleEndAddress === false) ? await getProvider(data['endAddress'], context.params.userId) : [];
+                const providerForStartAddress: Array<object> = (isPubliclyAccessibleStartAddress === false) ? await getProvider(data['startAddress'], context.params.userId, false) : [];
+                const providerForEndAddress: Array<object> = (isPubliclyAccessibleEndAddress === false) ? await getProvider(data['endAddress'], context.params.userId, data['checkAddress']) : [];
 
                 let sublinEndStep: Array<any> = [{}];
                 let sublinStartStep: Array<any> = [{}];
@@ -59,7 +59,6 @@ export const createRouting = functions
                     }
                     if (providerForEndAddress.length) {
                         stationForEndAddress = getPartOfFormattedAddress(providerForEndAddress[0]['stations'][0], STATION);
-
                     }
 
                     // If Sublin is only required for the the beginning of the trip

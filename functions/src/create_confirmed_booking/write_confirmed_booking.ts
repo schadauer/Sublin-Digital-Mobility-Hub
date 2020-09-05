@@ -3,7 +3,6 @@ import * as admin from 'firebase-admin';
 export async function writeConfirmedBooking(sublinStartStep: Map<any, any> | {}, sublinEndStep: Map<any, any> | {}, providerId: string, userId: string, bookingId: string): Promise<Array<any>> {
     try {
         if (sublinEndStep) {
-            console.log(sublinEndStep)
             await admin.firestore().collection('bookings').doc(providerId).collection('confirmed').doc(userId).set({
                 sublinEndStep,
                 userId,
@@ -14,7 +13,6 @@ export async function writeConfirmedBooking(sublinStartStep: Map<any, any> | {},
             }, { merge: true })
         }
         if (sublinStartStep) {
-            console.log(sublinStartStep)
             await admin.firestore().collection('bookings').doc(providerId).collection('confirmed').doc(userId).set({
                 sublinStartStep,
                 userId,

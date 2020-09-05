@@ -7,7 +7,6 @@ export const createConfirmBooking = functions
     .onUpdate(async (change, context) => {
         try {
             const after = change.after.data();
-
             if (after !== undefined) {
                 let sublinStartStep;
                 let sublinEndStep;
@@ -25,17 +24,8 @@ export const createConfirmBooking = functions
                     sublinStartStep = after.sublinStartStep;
                     sublinStartStep.confirmedTime = Date.now();
                 }
-
-                console.log(sublinEndStep);
-                console.log(sublinStartStep);
-                // sublinStartStep = sublinStartStep ?? {};
-                // sublinEndStep = sublinEndStep ?? {};
-                // console.log(sublinEndStep);
-                // console.log(sublinStartStep);
                 await writeConfirmedBooking(sublinStartStep, sublinEndStep, context.params.providerId, context.params.userId, after.bookingId);
             }
-
-
         } catch (e) {
             console.log(e);
         }

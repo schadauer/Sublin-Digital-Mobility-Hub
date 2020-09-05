@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import { updateUser } from './update_user';
 
-export const checkProviderStatus = functions
+export const setProviderToCompleted = functions
     .region('europe-west3')
     .firestore.document('/providers/{userId}')
     .onUpdate(async (change, context) => {

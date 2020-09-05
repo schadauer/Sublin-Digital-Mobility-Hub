@@ -99,34 +99,34 @@ export async function writeDummyData(): Promise<void> {
                 timeEnd: 2200,
                 timeStart: 600
             });
-            await admin.firestore().collection('providers').doc(sponsor + 'GemeindeSeitenstettenAll').set({
-                addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten'],
-                inOperation: true,
-                operationRequested: true,
-                providerName: 'Gemeinde Seitenstetten All',
-                providerPlan: 'all',
-                providerType: sponsor,
-                targetGroup: [],
-                partners: [taxi],
-                outOfWork: false,
-                stations: [],
-                timeEnd: 2200,
-                timeStart: 600
-            });
-            await admin.firestore().collection('providers').doc(sponsor + 'GemeindeSeitenstettenEmailOnly').set({
-                addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten'],
-                inOperation: true,
-                operationRequested: true,
-                providerName: 'Gemeinde Seitenstetten Email Only',
-                providerPlan: 'emailOnly',
-                providerType: sponsor,
-                targetGroup: ['andreas@simpledesign.io'],
-                partners: [taxi],
-                outOfWork: false,
-                stations: [],
-                timeEnd: 2200,
-                timeStart: 600
-            });
+            // await admin.firestore().collection('providers').doc(sponsor + 'GemeindeSeitenstettenAll').set({
+            //     addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten'],
+            //     inOperation: true,
+            //     operationRequested: true,
+            //     providerName: 'Gemeinde Seitenstetten All',
+            //     providerPlan: 'all',
+            //     providerType: sponsor,
+            //     targetGroup: [],
+            //     partners: [taxi],
+            //     outOfWork: false,
+            //     stations: [],
+            //     timeEnd: 2200,
+            //     timeStart: 600
+            // });
+            // await admin.firestore().collection('providers').doc(sponsor + 'GemeindeSeitenstettenEmailOnly').set({
+            //     addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten'],
+            //     inOperation: true,
+            //     operationRequested: true,
+            //     providerName: 'Gemeinde Seitenstetten Email Only',
+            //     providerPlan: 'emailOnly',
+            //     providerType: sponsor,
+            //     targetGroup: ['andreas@simpledesign.io'],
+            //     partners: [taxi],
+            //     outOfWork: false,
+            //     stations: [],
+            //     timeEnd: 2200,
+            //     timeStart: 600
+            // });
             await admin.firestore().collection('users').doc(user + 'toLisec').set({
                 email: 'andreas@simpledesign.io',
                 firstName: 'Andreas',
@@ -201,11 +201,19 @@ export async function writeDummyData(): Promise<void> {
             });
 
             await admin.firestore().collection('requests').doc(user + 'toWaidhofnerStrasse6').set({
+                checkAddress: true,
                 startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
                 startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
                 endId: 'ChIJk52Sx7A0ckcR1syxXIdjlUU',
                 endAddress: '__COU__AT__CIT__Seitenstetten__STR__Waidhofner Str.__NUM__6',
             });
+
+            // await admin.firestore().collection('requests').doc(user + 'toWaidhofnerStrasse6').set({
+            //     startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
+            //     startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
+            //     endId: 'ChIJk52Sx7A0ckcR1syxXIdjlUU',
+            //     endAddress: '__COU__AT__CIT__Seitenstetten__STR__Waidhofner Str.__NUM__6',
+            // });
 
             await admin.firestore().collection('requests').doc(user + 'toLisec').set({
                 startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
