@@ -12,6 +12,7 @@ export async function getProvider(formattedAddress: string, userId: string, chec
         let selectedProviders: Array<object> = [];
         const userEmail = await _getUserEmaiAddresses(userId);
 
+
         if (checkAddress !== undefined && checkAddress !== null && checkAddress === true) {
             shuttlesAndSponsors = await _getTaxis(formattedAddress);
             if (shuttlesAndSponsors.length !== 0)
@@ -22,21 +23,10 @@ export async function getProvider(formattedAddress: string, userId: string, chec
             shuttlesAndSponsors = [...shuttles, ...sponsors];
 
             // We need to remove those providers that have a target group set (emailOnly)
-            shuttlesAndSponsors = shuttlesAndSponsors.filter((provider) => {
-                if (provider['providerPlan'] !== null
-                    && provider['providerPlan'] === 'emailOnly'
-                    && provider['targetGroup'] !== null
-                ) {
-                    return provider['targetGroup'].includes(userEmail);
-                } else if (provider['providerPlan'] !== null
-                    && provider['providerPlan'] === 'all')
-                    return true;
-                else
-                    return false;
-            })
+            shuttlesAndSponsors = await _filterTargetGroupByEmails(shuttlesAndSponsors, userEmail);
 
             // Now we check which address is the closest starting with the house number
-            shuttlesAndSponsors.forEach((provider) => {
+            shuttlesAndSponsors.forEach(async (provider) => {
                 // Start with the street and number
                 provider['addresses'].forEach((address: string) => {
                     const providerStreet = getPartOfFormattedAddress(address, STREET);
@@ -51,7 +41,7 @@ export async function getProvider(formattedAddress: string, userId: string, chec
 
             // If we do not find an address that matches we try the city
             if (selectedProvider === null) {
-                shuttlesAndSponsors.forEach((provider) => {
+                shuttlesAndSponsors.forEach(async (provider) => {
                     // Start with the street and number
                     provider['addresses'].forEach((address: string) => {
                         const providerCity = getPartOfFormattedAddress(address, CITY);
@@ -73,11 +63,30 @@ export async function getProvider(formattedAddress: string, userId: string, chec
             else
                 selectedProviders = [];
         }
+
         return selectedProviders;
     } catch (e) {
         console.log(e);
         return [];
     }
+}
+
+async function _filterTargetGroupByEmails(shuttlesAndSponsors: Array<object>, userEmail: string): Promise<Array<object>> {
+    let shuttlesAndSponsorsFiltered = [];
+    for (let index = 0; index < shuttlesAndSponsors.length; index++) {
+        if (shuttlesAndSponsors[index]['providerPlan'] !== null && shuttlesAndSponsors[index]['providerPlan'] === 'emailOnly') {
+            const providerTargetGroupFromUser = await _getProviderTargetGroupFromUser(shuttlesAndSponsors[index]['id']);
+            if (providerTargetGroupFromUser !== undefined && providerTargetGroupFromUser !== null) {
+                if (providerTargetGroupFromUser.includes(userEmail)) {
+                    shuttlesAndSponsorsFiltered.push(shuttlesAndSponsors[index]);
+                }
+            }
+        } else if (shuttlesAndSponsors[index]['providerPlan'] !== null
+            && shuttlesAndSponsors[index]['providerPlan'] === 'all')
+            shuttlesAndSponsorsFiltered.push(shuttlesAndSponsors[index]);
+    }
+    console.log(shuttlesAndSponsorsFiltered);
+    return shuttlesAndSponsorsFiltered;
 }
 
 async function _getTaxiAsPartner(partnerId: string): Promise<any> {
@@ -120,7 +129,7 @@ async function _getSponsors(formattedAddress: string): Promise<Array<object>> {
     try {
         const querySnapshot = await admin.firestore().collection('providers')
             .where('addresses', "array-contains-any", getAddressesQueryArray(formattedAddress))
-            .where('providerType', '==', 'sponsor')
+            .where('providerType', '==', ['sponsor', 'sponsorShuttle'])
             .get();
         return getProvidersFromJson(querySnapshot);
     } catch (e) {
@@ -129,41 +138,16 @@ async function _getSponsors(formattedAddress: string): Promise<Array<object>> {
     }
 }
 
-// function _getProvidersFromJson(querySnapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>): Array<object> {
-//     const activeProviders = new Array();
-//     querySnapshot.forEach((doc: FirebaseFirestore.DocumentData) => {
-//         let data = doc.data();
-//         // if (doc.exists && data['stations']) {
-//         if (doc.exists) {
-//             // We expect an array of stations with the format XXXX_Name-of-station - XXXX stands for postcode.
-//             // if (_checkIfStationServed(data['stations'], getPartOfFormattedAddress(formattedAddress, CITY))
-//             if (data['inOperation'] === true
-//                 // && data['isTaxi'] === true
-//             ) {
-//                 activeProviders.push(_getProviderfromJson(doc));
-//             }
-//         }
-//     });
-//     return activeProviders;
-// }
-
-// function _getProviderfromJson(doc: FirebaseFirestore.DocumentData): object {
-//     const data = doc.data();
-//     const provider = {
-//         id: doc.id,
-//         providerName: data['providerName'],
-//         timeStart: data['timeStart'],
-//         timeEnd: data['timeEnd'],
-//         stations: data['stations'],
-//         addresses: data['addresses'],
-//         providerType: data['providerType'],
-//         providerPlan: data['providerPlan'],
-//         targetGroup: data['targetGroup'],
-//         partners: data['partners']
-//     };
-//     return provider;
-
-// }
+async function _getProviderTargetGroupFromUser(providerId: string): Promise<Array<any>> {
+    let targetGroup: Array<any> = [];
+    const doc = await admin.firestore().collection('users').doc(providerId)
+        .get();
+    const data: any = doc.data() ?? null;
+    if (data !== null && data['targetGroup'] !== undefined && data['targetGroup'] !== null) {
+        targetGroup = data['targetGroup'];
+    }
+    return targetGroup;
+}
 
 async function _getUserEmaiAddresses(userId: string): Promise<string> {
     let email: string = '';

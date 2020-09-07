@@ -12,6 +12,17 @@ export async function writeDummyData(): Promise<void> {
             return data.data();
         });
         if (!isFilledWithDummyData) {
+            // We need the user object to obtain the target groups
+            await admin.firestore().collection('users').doc(sponsor).set({
+                email: 'andreas@simpledesign.io',
+                firstName: 'Andreas',
+                homeAddress: 'Viktorgasse',
+                isProfileComplete: false,
+                isProvider: true,
+                targetGroup: ['andreas@simpledesign.io'],
+                requestedAddresses: [],
+                secondNmae: '',
+            });
             await admin.firestore().collection('providers').doc(sponsor).set({
                 addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STREET + 'Peter-Lisec-Straße' + COMPANY + 'LISEC Austria GmbH'],
                 inOperation: true,
@@ -19,7 +30,7 @@ export async function writeDummyData(): Promise<void> {
                 providerName: 'Lisec Seitenstetten',
                 providerPlan: 'emailOnly',
                 providerType: sponsor,
-                targetGroup: ['andreas@simpledesign.io'],
+                targetGroup: [],
                 partners: [taxi],
                 outOfWork: false,
                 stations: [],
@@ -71,6 +82,17 @@ export async function writeDummyData(): Promise<void> {
                 timeEnd: 2200,
                 timeStart: 600
             });
+            // We need the user object to obtain the target groups
+            await admin.firestore().collection('users').doc(shuttle + 'Hausmening').set({
+                email: 'andreas@simpledesign.io',
+                firstName: 'Andreas',
+                homeAddress: 'Viktorgasse',
+                isProfileComplete: false,
+                isProvider: true,
+                targetGroup: ['andreas@simpledesign.io'],
+                requestedAddresses: [],
+                secondNmae: '',
+            });
             await admin.firestore().collection('providers').doc(shuttle + 'Hausmening').set({
                 addresses: [COUNTRY + 'AT' + CITY + 'Hausmening' + STREET + 'Bahnhofstraße' + COMPANY + 'LISEC Holding GmbH'],
                 inOperation: true,
@@ -78,8 +100,8 @@ export async function writeDummyData(): Promise<void> {
                 providerName: 'Lisec Hausmening',
                 providerPlan: 'emailOnly',
                 providerType: shuttle,
-                targetGroup: ['andreas@simpledesign.io'],
                 partners: [],
+                targetGroup: [],
                 outOfWork: false,
                 stations: [COUNTRY + 'AT' + CITY + 'Seitenstetten' + STATION + 'Bahnhof St.Peter Seitenstetten' + COUNTRY + 'AT' + CITY + 'Seitenstetten'],
                 timeEnd: 2200,
@@ -113,20 +135,31 @@ export async function writeDummyData(): Promise<void> {
             //     timeEnd: 2200,
             //     timeStart: 600
             // });
-            // await admin.firestore().collection('providers').doc(sponsor + 'GemeindeSeitenstettenEmailOnly').set({
-            //     addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten'],
-            //     inOperation: true,
-            //     operationRequested: true,
-            //     providerName: 'Gemeinde Seitenstetten Email Only',
-            //     providerPlan: 'emailOnly',
-            //     providerType: sponsor,
-            //     targetGroup: ['andreas@simpledesign.io'],
-            //     partners: [taxi],
-            //     outOfWork: false,
-            //     stations: [],
-            //     timeEnd: 2200,
-            //     timeStart: 600
-            // });
+            await admin.firestore().collection('users').doc(sponsor + 'GemeindeSeitenstettenEmailOnly').set({
+                email: 'andreas@simpledesign.io',
+                firstName: 'Andreas',
+                homeAddress: 'Viktorgasse',
+                isProfileComplete: false,
+                isProvider: true,
+                targetGroup: ['andreas@simpledesign.io'],
+                requestedAddresses: [],
+                secondNmae: '',
+            });
+            await admin.firestore().collection('providers').doc(sponsor + 'GemeindeSeitenstettenEmailOnly').set({
+                addresses: [COUNTRY + 'AT' + CITY + 'Seitenstetten'],
+                inOperation: true,
+                operationRequested: true,
+                providerName: 'Gemeinde Seitenstetten Email Only',
+                providerPlan: 'emailOnly',
+                providerType: sponsor,
+                // targetGroup: ['andreas@simpledesign.io'],
+                partners: [taxi],
+                outOfWork: false,
+                stations: [],
+                timeEnd: 2200,
+                timeStart: 600
+            });
+
             await admin.firestore().collection('users').doc(user + 'toLisec').set({
                 email: 'andreas@simpledesign.io',
                 firstName: 'Andreas',
@@ -200,20 +233,20 @@ export async function writeDummyData(): Promise<void> {
                 secondNmae: '',
             });
 
-            await admin.firestore().collection('requests').doc(user + 'toWaidhofnerStrasse6').set({
-                checkAddress: true,
-                startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
-                startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
-                endId: 'ChIJk52Sx7A0ckcR1syxXIdjlUU',
-                endAddress: '__COU__AT__CIT__Seitenstetten__STR__Waidhofner Str.__NUM__6',
-            });
-
             // await admin.firestore().collection('requests').doc(user + 'toWaidhofnerStrasse6').set({
+            //     checkAddress: true,
             //     startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
             //     startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
             //     endId: 'ChIJk52Sx7A0ckcR1syxXIdjlUU',
             //     endAddress: '__COU__AT__CIT__Seitenstetten__STR__Waidhofner Str.__NUM__6',
             // });
+
+            await admin.firestore().collection('requests').doc(user + 'toWaidhofnerStrasse6').set({
+                startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
+                startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
+                endId: 'ChIJk52Sx7A0ckcR1syxXIdjlUU',
+                endAddress: '__COU__AT__CIT__Seitenstetten__STR__Waidhofner Str.__NUM__6',
+            });
 
             await admin.firestore().collection('requests').doc(user + 'toLisec').set({
                 startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
