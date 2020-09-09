@@ -70,6 +70,7 @@ const data = {
             '${delimiter.COUNTRY}AT${delimiter.CITY}Seitenstetten'
         ],
         inOperation: true,
+        communes: ['__COU__AT__CIT__Seitenstetten',],
         operationRequested: true,
         providerName: 'Gemeinde Seitenstetten',
         providerPlan: 'all',
@@ -88,6 +89,7 @@ const data = {
             '${delimiter.COUNTRY}AT${delimiter.CITY}Seitenstetten'
         ],
         inOperation: true,
+        communes: ['__COU__AT__CIT__Seitenstetten'],
         operationRequested: true,
         providerName: 'Taxi Seitenstetten',
         providerPlan: 'all',
@@ -103,6 +105,7 @@ const data = {
         uid: 'WXpz91NEodPbK6pM04V8OVgcOiu2',
         addresses: ['${delimiter.COUNTRY}AT${delimiter.CITY}Seitenstetten${delimiter.STREET}Am Klosterberg${delimiter.COMPANY}Stift Seitenstetten'],
         inOperation: true,
+        communes: ['__COU__AT__CIT__Seitenstetten'],
         operationRequested: true,
         providerName: 'Stift Seitenstetten',
         providerPlan: 'all',
@@ -119,6 +122,7 @@ const data = {
         addresses: ['${delimiter.COUNTRY}AT${delimiter.CITY}Seitenstetten${delimiter.STREET}Peter-Lisec-Straße${delimiter.COMPANY}LISEC Austria GmbH',
         ],
         inOperation: true,
+        communes: ['__COU__AT__CIT__Seitenstetten'],
         operationRequested: true,
         providerName: 'Lisec Seitenstetten',
         providerPlan: 'emailOnly',

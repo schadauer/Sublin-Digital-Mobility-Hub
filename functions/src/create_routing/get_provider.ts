@@ -25,13 +25,13 @@ export async function getProvider(formattedAddress: string, userId: string, chec
             shuttlesAndSponsors = await _filterTargetGroupByEmails(shuttles, userEmail);
             // If we do not find a shuttle for our request we go on with the shuttle sponsors
             // for a particular address
-            if (shuttlesAndSponsors.length == 0) {
+            if (shuttlesAndSponsors.length === 0) {
                 const shuttleSponsors = await _getShuttleSponsor(formattedAddress);
                 shuttlesAndSponsors = await _filterTargetGroupByEmails(shuttleSponsors, userEmail);
             }
             // Still no provider found? Let's continue our journey with the sponsors
             // for a city
-            if (shuttlesAndSponsors.length == 0) {
+            else if (shuttlesAndSponsors.length === 0) {
                 const sponsors = await _getSponsors(formattedAddress);
                 shuttlesAndSponsors = await _filterTargetGroupByEmails(sponsors, userEmail);
 
@@ -100,21 +100,26 @@ export async function getProvider(formattedAddress: string, userId: string, chec
     }
 }
 
-async function _filterTargetGroupByEmails(shuttlesAndSponsors: Array<object>, userEmail: string): Promise<Array<object>> {
-    let shuttlesAndSponsorsFiltered = [];
-    for (let index = 0; index < shuttlesAndSponsors.length; index++) {
-        if (shuttlesAndSponsors[index]['providerPlan'] !== null && shuttlesAndSponsors[index]['providerPlan'] === 'emailOnly') {
-            if (shuttlesAndSponsors[index]['targetGroup'] !== undefined && shuttlesAndSponsors[index]['targetGroup'] !== null) {
-                if (shuttlesAndSponsors[index]['targetGroup'].includes(crypto.createHash('sha256').update(userEmail).digest('hex'))) {
-                    shuttlesAndSponsorsFiltered.push(shuttlesAndSponsors[index]);
+async function _filterTargetGroupByEmails(resultList: Array<object>, userEmail: string): Promise<Array<object>> {
+    let resultListFiltered = [];
+    for (let index = 0; index < resultList.length; index++) {
+        console.log(resultList[index]);
+        if (resultList[index]['providerPlan'] !== null && resultList[index]['providerPlan'] === 'emailOnly') {
+            if (resultList[index]['targetGroup'] !== undefined && resultList[index]['targetGroup'] !== null) {
+                console.log(crypto.createHash('sha256').update(userEmail).digest('hex'));
+                console.log(resultList[index]['targetGroup']);
+                if (resultList[index]['targetGroup'].includes(crypto.createHash('sha256').update(userEmail).digest('hex'))) {
+                    resultListFiltered.push(resultList[index]);
+                    console.log('got it');
                 }
             }
-        } else if (shuttlesAndSponsors[index]['providerPlan'] !== null
-            && shuttlesAndSponsors[index]['providerPlan'] === 'all')
-            shuttlesAndSponsorsFiltered.push(shuttlesAndSponsors[index]);
-    }
+            console.log(resultListFiltered);
+        } else if (resultList[index]['providerPlan'] !== null
+            && resultList[index]['providerPlan'] === 'all')
+            resultListFiltered.push(resultList[index]);
 
-    return shuttlesAndSponsorsFiltered;
+    }
+    return resultListFiltered = resultListFiltered;
 }
 
 async function _getTaxiAsPartner(partnerId: string): Promise<any> {
