@@ -1,43 +1,70 @@
 import * as admin from 'firebase-admin';
+const crypto = require("crypto");
 import { getAddressesQueryArray } from '../utils/get_addresses_query_array';
 import { getPartOfFormattedAddress } from '../utils/get_part_of_formatted_address';
-import { CITY, STREET } from '../types/delimiter';
+import { CITY, COMPANY, STREET } from '../types/delimiter';
 import { getProvidersFromJson } from '../utils/get_providers_from_json';
 import { getProviderFromJson } from '../utils/get_provider_from_json';
 
 export async function getProvider(formattedAddress: string, userId: string, checkAddress: boolean): Promise<Array<object>> {
     try {
+
         let shuttlesAndSponsors: Array<object>;
         let selectedProvider: object | null = null;
         let selectedProviders: Array<object> = [];
         const userEmail = await _getUserEmaiAddresses(userId);
 
-
+        // This is only for address check-up and not to create a route
         if (checkAddress !== undefined && checkAddress !== null && checkAddress === true) {
             shuttlesAndSponsors = await _getTaxis(formattedAddress);
             if (shuttlesAndSponsors.length !== 0)
                 selectedProviders = shuttlesAndSponsors;
         } else {
+            // We start our search with the shuttles
             const shuttles = await _getShuttles(formattedAddress);
-            const sponsors = await _getSponsors(formattedAddress);
-            shuttlesAndSponsors = [...shuttles, ...sponsors];
+            shuttlesAndSponsors = await _filterTargetGroupByEmails(shuttles, userEmail);
+            // If we do not find a shuttle for our request we go on with the shuttle sponsors
+            // for a particular address
+            if (shuttlesAndSponsors.length == 0) {
+                const shuttleSponsors = await _getShuttleSponsor(formattedAddress);
+                shuttlesAndSponsors = await _filterTargetGroupByEmails(shuttleSponsors, userEmail);
+            }
+            // Still no provider found? Let's continue our journey with the sponsors
+            // for a city
+            if (shuttlesAndSponsors.length == 0) {
+                const sponsors = await _getSponsors(formattedAddress);
+                shuttlesAndSponsors = await _filterTargetGroupByEmails(sponsors, userEmail);
 
-            // We need to remove those providers that have a target group set (emailOnly)
-            shuttlesAndSponsors = await _filterTargetGroupByEmails(shuttlesAndSponsors, userEmail);
-
-            // Now we check which address is the closest starting with the house number
+            }
+            // First we check which address is the closest starting with the company name
             shuttlesAndSponsors.forEach(async (provider) => {
                 // Start with the street and number
                 provider['addresses'].forEach((address: string) => {
-                    const providerStreet = getPartOfFormattedAddress(address, STREET);
+                    const providerStreet = getPartOfFormattedAddress(address, COMPANY);
                     // const providerNumber = getPartOfFormattedAddress(address, NUMBER);
-                    const requestedStreet = getPartOfFormattedAddress(formattedAddress, STREET);
+                    const requestedStreet = getPartOfFormattedAddress(formattedAddress, COMPANY);
                     // const requestedNumber = getPartOfFormattedAddress(formattedAddress, NUMBER);
 
                     if (providerStreet === requestedStreet)
                         selectedProvider = provider;
                 });
             })
+
+            // Now we check which address is the second closest with the house number
+            if (selectedProvider === null) {
+                shuttlesAndSponsors.forEach(async (provider) => {
+                    // Start with the street and number
+                    provider['addresses'].forEach((address: string) => {
+                        const providerStreet = getPartOfFormattedAddress(address, STREET);
+                        // const providerNumber = getPartOfFormattedAddress(address, NUMBER);
+                        const requestedStreet = getPartOfFormattedAddress(formattedAddress, STREET);
+                        // const requestedNumber = getPartOfFormattedAddress(formattedAddress, NUMBER);
+
+                        if (providerStreet === requestedStreet)
+                            selectedProvider = provider;
+                    });
+                })
+            }
 
             // If we do not find an address that matches we try the city
             if (selectedProvider === null) {
@@ -51,12 +78,14 @@ export async function getProvider(formattedAddress: string, userId: string, chec
                     });
                 })
             }
+
             // Now we need to get the taxi provider for the sponsors
-            if (selectedProvider !== null && selectedProvider['providerType'] === 'sponsor') {
+            if (selectedProvider !== null && selectedProvider['providerType'] === 'sponsor' || selectedProvider !== null && selectedProvider['providerType'] === 'shuttleSponsor') {
                 const sponsor = selectedProvider;
                 selectedProvider = await _getTaxiAsPartner(selectedProvider['partners'][0]);
                 if (selectedProvider !== null)
                     selectedProvider['sponsor'] = sponsor;
+
             }
             if (selectedProvider !== null)
                 selectedProviders = [selectedProvider];
@@ -75,9 +104,8 @@ async function _filterTargetGroupByEmails(shuttlesAndSponsors: Array<object>, us
     let shuttlesAndSponsorsFiltered = [];
     for (let index = 0; index < shuttlesAndSponsors.length; index++) {
         if (shuttlesAndSponsors[index]['providerPlan'] !== null && shuttlesAndSponsors[index]['providerPlan'] === 'emailOnly') {
-            const providerTargetGroupFromUser = await _getProviderTargetGroupFromUser(shuttlesAndSponsors[index]['id']);
-            if (providerTargetGroupFromUser !== undefined && providerTargetGroupFromUser !== null) {
-                if (providerTargetGroupFromUser.includes(userEmail)) {
+            if (shuttlesAndSponsors[index]['targetGroup'] !== undefined && shuttlesAndSponsors[index]['targetGroup'] !== null) {
+                if (shuttlesAndSponsors[index]['targetGroup'].includes(crypto.createHash('sha256').update(userEmail).digest('hex'))) {
                     shuttlesAndSponsorsFiltered.push(shuttlesAndSponsors[index]);
                 }
             }
@@ -85,7 +113,7 @@ async function _filterTargetGroupByEmails(shuttlesAndSponsors: Array<object>, us
             && shuttlesAndSponsors[index]['providerPlan'] === 'all')
             shuttlesAndSponsorsFiltered.push(shuttlesAndSponsors[index]);
     }
-    console.log(shuttlesAndSponsorsFiltered);
+
     return shuttlesAndSponsorsFiltered;
 }
 
@@ -112,11 +140,11 @@ async function _getShuttles(formattedAddress: string): Promise<Array<object>> {
     }
 }
 
-async function _getTaxis(formattedAddress: string): Promise<Array<object>> {
+async function _getShuttleSponsor(formattedAddress: string): Promise<Array<object>> {
     try {
         const querySnapshot = await admin.firestore().collection('providers')
             .where('addresses', "array-contains-any", getAddressesQueryArray(formattedAddress))
-            .where('providerType', '==', 'taxi')
+            .where('providerType', '==', 'shuttleSponsor')
             .get();
         return getProvidersFromJson(querySnapshot);
     } catch (e) {
@@ -129,7 +157,7 @@ async function _getSponsors(formattedAddress: string): Promise<Array<object>> {
     try {
         const querySnapshot = await admin.firestore().collection('providers')
             .where('addresses', "array-contains-any", getAddressesQueryArray(formattedAddress))
-            .where('providerType', '==', ['sponsor', 'sponsorShuttle'])
+            .where('providerType', '==', 'sponsor')
             .get();
         return getProvidersFromJson(querySnapshot);
     } catch (e) {
@@ -138,15 +166,17 @@ async function _getSponsors(formattedAddress: string): Promise<Array<object>> {
     }
 }
 
-async function _getProviderTargetGroupFromUser(providerId: string): Promise<Array<any>> {
-    let targetGroup: Array<any> = [];
-    const doc = await admin.firestore().collection('users').doc(providerId)
-        .get();
-    const data: any = doc.data() ?? null;
-    if (data !== null && data['targetGroup'] !== undefined && data['targetGroup'] !== null) {
-        targetGroup = data['targetGroup'];
+async function _getTaxis(formattedAddress: string): Promise<Array<object>> {
+    try {
+        const querySnapshot = await admin.firestore().collection('providers')
+            .where('addresses', "array-contains-any", getAddressesQueryArray(formattedAddress))
+            .where('providerType', '==', 'taxi')
+            .get();
+        return getProvidersFromJson(querySnapshot);
+    } catch (e) {
+        console.log(e);
+        return [];
     }
-    return targetGroup;
 }
 
 async function _getUserEmaiAddresses(userId: string): Promise<string> {

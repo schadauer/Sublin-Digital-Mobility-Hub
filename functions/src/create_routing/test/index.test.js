@@ -11,11 +11,15 @@ var test = (test, delimiter, data) => {
             const taxi = 'taxi';
 
             eval(data.setUserSeitenstetten);
-            eval(data.setUserSponsorShuttleAllSeitenstetten);
+            eval(data.setUserLisecAllSeitenstetten);
             eval(data.setUserTaxiSeitenstetten);
             eval(data.setUserSponsorAllSeitenstetten);
-            eval(data.setProviderSponsorAllSeitenstetten);
+            eval(data.setUserStiftSeitenstettenSeitenstetten);
+            eval(data.setProviderGemeindeSeitenstetten);
             eval(data.setProviderTaxiSeitenstetten);
+            eval(data.setProviderLisecSeitenstetten);
+            eval(data.setProviderStiftSeitenstetten);
+
         });
 
         after(() => {
@@ -26,30 +30,30 @@ var test = (test, delimiter, data) => {
         describe('createRoute', async () => {
             it('should find and write a route to the routing collection', async () => {
                 const wrapped = test.wrap(myFunctions.createRouting);
-                await firestore().collection('requests').doc('testuser').set({
+                await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').set({
                     startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
                     startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__12',
                     endId: 'ChIJL2dh39E0ckcRJrcj74AXr_k',
-                    endAddress: '__COU__AT__CIT__Peter-Lisec-Straße, Seitenstetten__COM__LISEC Austria GmbH',
+                    endAddress: '__COU__AT__CIT__Seitenstetten__STR__Peter-Lisec-Straße__COM__LISEC Austria GmbH',
                     checkAddress: false,
                 });
-                const beforeSnap = await firestore().collection('requests').doc('testuser').get();
+                const beforeSnap = await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get();
                 await firestore().collection('requests').doc('testuser').set({
                     startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
                     startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
                     endId: 'ChIJL2dh39E0ckcRJrcj74AXr_k',
-                    endAddress: '__COU__AT__CIT__Seitenstetten__COM__LISEC Austria GmbH',
+                    endAddress: '__COU__AT__CIT__Seitenstetten__STR__Peter-Lisec-Straße__COM__LISEC Austria GmbH',
                     checkAddress: false,
                 });
-                const afterSnap = await firestore().collection('requests').doc('testuser').get();
+                const afterSnap = await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get();
                 const dataRequests = test.makeChange(beforeSnap, afterSnap);
                 return await wrapped(dataRequests, {
                     params: {
-                        userId: 'testuser'
+                        userId: 'YOxqioCO5LTSEWXqnN2Gnm6obvH3'
                     }
                 }).then(async () => {
-                    return firestore().collection('routings').doc('testuser').get().then((doc) => {
-                        return assert.equal(doc.data()['userId'], 'testuser');
+                    return firestore().collection('routings').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get().then((doc) => {
+                        return assert.equal(doc.data()['userId'], 'YOxqioCO5LTSEWXqnN2Gnm6obvH3');
                     });
                 });
             });
