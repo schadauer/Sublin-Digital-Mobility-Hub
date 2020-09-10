@@ -8,11 +8,11 @@ import { getProviderFromJson } from '../utils/get_provider_from_json';
 
 export async function getProvider(formattedAddress: string, userId: string, checkAddress: boolean): Promise<Array<object>> {
     try {
-
         let shuttlesAndSponsors: Array<object>;
         let selectedProvider: object | null = null;
         let selectedProviders: Array<object> = [];
         const userEmail = await _getUserEmaiAddresses(userId);
+
 
         // This is only for address check-up and not to create a route
         if (checkAddress !== undefined && checkAddress !== null && checkAddress === true) {
@@ -103,17 +103,12 @@ export async function getProvider(formattedAddress: string, userId: string, chec
 async function _filterTargetGroupByEmails(resultList: Array<object>, userEmail: string): Promise<Array<object>> {
     let resultListFiltered = [];
     for (let index = 0; index < resultList.length; index++) {
-        console.log(resultList[index]);
         if (resultList[index]['providerPlan'] !== null && resultList[index]['providerPlan'] === 'emailOnly') {
             if (resultList[index]['targetGroup'] !== undefined && resultList[index]['targetGroup'] !== null) {
-                console.log(crypto.createHash('sha256').update(userEmail).digest('hex'));
-                console.log(resultList[index]['targetGroup']);
                 if (resultList[index]['targetGroup'].includes(crypto.createHash('sha256').update(userEmail).digest('hex'))) {
                     resultListFiltered.push(resultList[index]);
-                    console.log('got it');
                 }
             }
-            console.log(resultListFiltered);
         } else if (resultList[index]['providerPlan'] !== null
             && resultList[index]['providerPlan'] === 'all')
             resultListFiltered.push(resultList[index]);
@@ -173,6 +168,8 @@ async function _getSponsors(formattedAddress: string): Promise<Array<object>> {
 
 async function _getTaxis(formattedAddress: string): Promise<Array<object>> {
     try {
+        console.log('get the call');
+        console.log(formattedAddress);
         const querySnapshot = await admin.firestore().collection('providers')
             .where('addresses', "array-contains-any", getAddressesQueryArray(formattedAddress))
             .where('providerType', '==', 'taxi')

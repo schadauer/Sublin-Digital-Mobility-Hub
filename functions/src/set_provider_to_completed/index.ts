@@ -7,7 +7,7 @@ export const setProviderToCompleted = functions
     .onUpdate(async (change, context) => {
         try {
             const data = change.after.data();
-            if (data !== undefined) {
+            if (data !== undefined && data['isRegistrationCompleted'] === true) {
                 await updateUser(true, context.params.userId);
             }
         } catch (e) {

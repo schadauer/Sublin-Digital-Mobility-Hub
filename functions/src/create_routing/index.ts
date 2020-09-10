@@ -39,7 +39,6 @@ export const createRouting = functions
                 const isPubliclyAccessibleStartAddress: boolean = isPubliclyAccessible(data['startAddress']);
                 const providerForStartAddress: Array<object> = (isPubliclyAccessibleStartAddress === false) ? await getProvider(data['startAddress'], context.params.userId, false) : [];
                 const providerForEndAddress: Array<object> = (isPubliclyAccessibleEndAddress === false) ? await getProvider(data['endAddress'], context.params.userId, data['checkAddress']) : [];
-
                 let sublinEndStep: Array<any> = [{}];
                 let sublinStartStep: Array<any> = [{}];
                 let stationForStartAddress: string = '';
@@ -47,8 +46,6 @@ export const createRouting = functions
                 let publicSteps: Array<any> = [];
                 let startTimeForStartAddress: number;
                 let startTimeForEndAddress: number;
-
-
                 // If a provider is available
                 if (providerForEndAddress.length || providerForStartAddress.length) {
 
@@ -141,6 +138,7 @@ export const createRouting = functions
                             providerForEndAddress[0],
                         );
                     }
+
                     await writeRoute(
                         publicSteps,
                         sublinStartStep[0],
@@ -159,6 +157,7 @@ export const createRouting = functions
                 } else {
                     // If no provider is available we provide information about the location
                     // Information about the postcode and the city
+
                     await writeRoute(
                         [],
                         [],

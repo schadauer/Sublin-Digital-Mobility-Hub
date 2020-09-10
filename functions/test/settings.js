@@ -13,21 +13,25 @@ const data = {
         firstName: 'User Seitenstetten',
         homeAddress: 'Waidhofner Straße 6',
         isRegistrationCompleted: true,
+        isProviderCompleted: true,
         communes: ['__COU__AT__CIT__Seitenstetten', '__COU__AT__CIT__Biberbach'],
         requestedAddresses: [], 
         userType: 'user',
         secondName: '', 
+        targetGroup: [],
     })`,
-    setUserLisecAllSeitenstetten: `firestore().collection('users').doc('b1cdh5A7zfUnwqi9nQoUU4iZKa92').set({
-        uid: 'b1cdh5A7zfUnwqi9nQoUU4iZKa92',
-        email: 'sponsorshuttle_all_seitenstetten@sublin.app',
+    setUserLisecAllSeitenstetten: `firestore().collection('users').doc('KOvDYdBJ2Ba3AXGNzlK7ACswBky2').set({
+        uid: 'KOvDYdBJ2Ba3AXGNzlK7ACswBky2',
+        email: 'lisec@sublin.app',
         firstName: 'Lisec Seitenstetten',
         homeAddress: '',
         isRegistrationCompleted: true,
+        isProviderCompleted: true,
         communes: ['seitenstetten'],
         requestedAddresses: ['user@sublin.app'],
         userType: 'sponsor',
         secondName: '',
+        targetGroup: ['user@sublin.app'],
     })`,
     setUserStiftSeitenstettenSeitenstetten: `firestore().collection('users').doc('WXpz91NEodPbK6pM04V8OVgcOiu2').set({
         uid: 'WXpz91NEodPbK6pM04V8OVgcOiu2',
@@ -35,10 +39,12 @@ const data = {
         firstName: 'Stift Seitenstetten Shuttle',
         homeAddress: '',
         isRegistrationCompleted: true,
+        isProviderCompleted: true,
         communes: [],
         requestedAddresses: ['user@sublin.app'],
         userType: 'provider',
         secondName: '',
+        targetGroup: [],
     })`,
     setUserTaxiSeitenstetten: `firestore().collection('users').doc('TYOFztSh4uOJpqKowJS5YqC7KSJ2').set({
         uid: 'TYOFztSh4uOJpqKowJS5YqC7KSJ2',
@@ -46,10 +52,12 @@ const data = {
         firstName: 'Taxi Seitenstetten',
         homeAddress: 'Waidhofner Straße 6',
         isRegistrationCompleted: true,
+        isProviderCompleted: true,
         communes: [],
         requestedAddresses: [],
         userType: 'provider',
         secondName: '',
+        targetGroup: [],
     })`,
     setUserSponsorAllSeitenstetten: `firestore().collection('users').doc('lKYkhwAJTDUQy0uEBHZlpcERwvX2').set({ \
         uid: 'lKYkhwAJTDUQy0uEBHZlpcERwvX2',
@@ -61,6 +69,7 @@ const data = {
         requestedAddresses: [], 
         userType: 'sponsor',
         secondName: '',
+        targetGroup: [],
     })`,
     // Now we need to set up the providers docs for the providers
     setProviderGemeindeSeitenstetten: `firestore().collection('providers').doc('lKYkhwAJTDUQy0uEBHZlpcERwvX2').set({ 
@@ -117,8 +126,8 @@ const data = {
         timeEnd: 2200,
         timeStart: 600
     })`,
-    setProviderLisecSeitenstetten: `firestore().collection('providers').doc('b1cdh5A7zfUnwqi9nQoUU4iZKa92').set({ 
-        uid: 'b1cdh5A7zfUnwqi9nQoUU4iZKa92',
+    setProviderLisecEmailOnlySeitenstetten: `firestore().collection('providers').doc('KOvDYdBJ2Ba3AXGNzlK7ACswBky2').set({ 
+        uid: 'KOvDYdBJ2Ba3AXGNzlK7ACswBky2',
         addresses: ['${delimiter.COUNTRY}AT${delimiter.CITY}Seitenstetten${delimiter.STREET}Peter-Lisec-Straße${delimiter.COMPANY}LISEC Austria GmbH',
         ],
         inOperation: true,
@@ -126,7 +135,7 @@ const data = {
         operationRequested: true,
         providerName: 'Lisec Seitenstetten',
         providerPlan: 'emailOnly',
-        providerType: 'shuttleSponsor',
+        providerType: 'sponsorShuttle',
         targetGroup: ['${emailSha256}'],
         partners: ['TYOFztSh4uOJpqKowJS5YqC7KSJ2'],
         outOfWork: false,
