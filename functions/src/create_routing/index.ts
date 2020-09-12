@@ -31,7 +31,7 @@ export const createRouting = functions
         try {
             const data = change.after.data();
             // Let's get the full route
-            if (data !== undefined && data['endId'] && data['startId'] && data['endAddress'] && data['startAddress']) {
+            if (data !== undefined && data['endAddress'] && data['startAddress']) {
                 // Let's check if a provider is available for the end address
                 //const addressGooglePlaceData: object = await getPlace(data['endId']);
                 //const addressDetails: AddressDetails = getAddressDetails(addressGooglePlaceData)
@@ -48,7 +48,6 @@ export const createRouting = functions
                 let startTimeForEndAddress: number;
                 // If a provider is available
                 if (providerForEndAddress.length || providerForStartAddress.length) {
-
                     // Needs refactoring:
                     // if multiple providers are available with multiple stations
                     if (providerForStartAddress.length) {
@@ -144,10 +143,10 @@ export const createRouting = functions
                         sublinStartStep[0],
                         sublinEndStep[0],
                         context.params.userId,
-                        data['startId'],
+                        'startId',
                         data['startAddress'],
                         stationForStartAddress,
-                        data['endId'],
+                        'endId',
                         data['endAddress'],
                         stationForEndAddress,
                         data['checkAddress'],
@@ -163,10 +162,10 @@ export const createRouting = functions
                         [],
                         [],
                         context.params.userId,
-                        data['startId'],
+                        'startId',
                         data['startAddress'],
                         stationForStartAddress,
-                        data['endId'],
+                        'endId',
                         data['endAddress'],
                         stationForEndAddress,
                         data['checkAddress'],

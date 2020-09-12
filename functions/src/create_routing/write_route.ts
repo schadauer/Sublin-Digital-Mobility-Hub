@@ -16,7 +16,6 @@ export async function writeRoute(
     checkAddress: boolean = false,
     isPubliclyAccessibleStartAddress: boolean,
     isPubliclyAccessibleEndAddress: boolean): Promise<void> {
-    console.log(RoutingStatus.active);
     try {
         if (Object.keys(sublinStartStep).length || Object.keys(sublinEndStep).length) {
             await admin.firestore().collection(checkAddress ? 'check' : 'routings').doc(userId).set({

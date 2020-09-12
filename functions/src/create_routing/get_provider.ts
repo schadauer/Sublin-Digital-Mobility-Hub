@@ -5,16 +5,17 @@ import { getPartOfFormattedAddress } from '../utils/get_part_of_formatted_addres
 import { CITY, COMPANY, STREET } from '../types/delimiter';
 import { getProvidersFromJson } from '../utils/get_providers_from_json';
 import { getProviderFromJson } from '../utils/get_provider_from_json';
+import { StepStatus } from '../types/step_status'
 
 export async function getProvider(formattedAddress: string, userId: string, checkAddress: boolean): Promise<Array<object>> {
     try {
         let shuttlesAndSponsors: Array<object>;
         let selectedProvider: object | null = null;
-        let selectedProviders: Array<object> = [];
+        let selectedProviders: Array<object> | StepStatus = [];
         const userEmail = await _getUserEmaiAddresses(userId);
+        let stepStatus: StepStatus = StepStatus.notAvailable;
 
-
-        // This is only for address check-up and not to create a route
+        // CHECK - ONLY -This is only for address check-up and not to create a route
         if (checkAddress !== undefined && checkAddress !== null && checkAddress === true) {
             shuttlesAndSponsors = await _getTaxis(formattedAddress);
             if (shuttlesAndSponsors.length !== 0)
@@ -23,18 +24,23 @@ export async function getProvider(formattedAddress: string, userId: string, chec
             // We start our search with the shuttles
             const shuttles = await _getShuttles(formattedAddress);
             shuttlesAndSponsors = await _filterTargetGroupByEmails(shuttles, userEmail);
+            if (shuttles.length !== 0 && shuttlesAndSponsors.length === 0)
+                stepStatus = StepStatus.notInTargetGroup
+
             // If we do not find a shuttle for our request we go on with the shuttle sponsors
             // for a particular address
             if (shuttlesAndSponsors.length === 0) {
-                const shuttleSponsors = await _getShuttleSponsor(formattedAddress);
-                shuttlesAndSponsors = await _filterTargetGroupByEmails(shuttleSponsors, userEmail);
+                const sponsorShuttle = await _getSponsorShuttle(formattedAddress);
+                shuttlesAndSponsors = await _filterTargetGroupByEmails(sponsorShuttle, userEmail);
+                if (sponsorShuttle.length !== 0 && shuttlesAndSponsors.length === 0)
+                    stepStatus = StepStatus.notInTargetGroup
             }
             // Still no provider found? Let's continue our journey with the sponsors
             // for a city
-            else if (shuttlesAndSponsors.length === 0) {
+            if (shuttlesAndSponsors.length === 0 && stepStatus as StepStatus !== StepStatus.notInTargetGroup) {
                 const sponsors = await _getSponsors(formattedAddress);
+                stepStatus = StepStatus.notInTargetGroup;
                 shuttlesAndSponsors = await _filterTargetGroupByEmails(sponsors, userEmail);
-
             }
             // First we check which address is the closest starting with the company name
             shuttlesAndSponsors.forEach(async (provider) => {
@@ -44,13 +50,12 @@ export async function getProvider(formattedAddress: string, userId: string, chec
                     // const providerNumber = getPartOfFormattedAddress(address, NUMBER);
                     const requestedStreet = getPartOfFormattedAddress(formattedAddress, COMPANY);
                     // const requestedNumber = getPartOfFormattedAddress(formattedAddress, NUMBER);
-
                     if (providerStreet === requestedStreet)
                         selectedProvider = provider;
                 });
             })
 
-            // Now we check which address is the second closest with the house number
+            // Now we check which address is the second closest with the street number
             if (selectedProvider === null) {
                 shuttlesAndSponsors.forEach(async (provider) => {
                     // Start with the street and number
@@ -80,19 +85,18 @@ export async function getProvider(formattedAddress: string, userId: string, chec
             }
 
             // Now we need to get the taxi provider for the sponsors
-            if (selectedProvider !== null && selectedProvider['providerType'] === 'sponsor' || selectedProvider !== null && selectedProvider['providerType'] === 'shuttleSponsor') {
+            // and we need to check if the taxi has approved of the relationship in target group
+            if (selectedProvider !== null && selectedProvider['providerType'] === 'sponsor' || selectedProvider !== null && selectedProvider['providerType'] === 'sponsorShuttle') {
                 const sponsor = selectedProvider;
                 selectedProvider = await _getTaxiAsPartner(selectedProvider['partners'][0]);
                 if (selectedProvider !== null)
                     selectedProvider['sponsor'] = sponsor;
-
             }
             if (selectedProvider !== null)
                 selectedProviders = [selectedProvider];
             else
                 selectedProviders = [];
         }
-
         return selectedProviders;
     } catch (e) {
         console.log(e);
@@ -103,17 +107,18 @@ export async function getProvider(formattedAddress: string, userId: string, chec
 async function _filterTargetGroupByEmails(resultList: Array<object>, userEmail: string): Promise<Array<object>> {
     let resultListFiltered = [];
     for (let index = 0; index < resultList.length; index++) {
-        if (resultList[index]['providerPlan'] !== null && resultList[index]['providerPlan'] === 'emailOnly') {
+        if (resultList[index]['providerPlan'] !== undefined && resultList[index]['providerPlan'] !== null && resultList[index]['providerPlan'] === 'emailOnly') {
             if (resultList[index]['targetGroup'] !== undefined && resultList[index]['targetGroup'] !== null) {
                 if (resultList[index]['targetGroup'].includes(crypto.createHash('sha256').update(userEmail).digest('hex'))) {
                     resultListFiltered.push(resultList[index]);
+
                 }
             }
         } else if (resultList[index]['providerPlan'] !== null
             && resultList[index]['providerPlan'] === 'all')
             resultListFiltered.push(resultList[index]);
-
     }
+
     return resultListFiltered = resultListFiltered;
 }
 
@@ -140,11 +145,11 @@ async function _getShuttles(formattedAddress: string): Promise<Array<object>> {
     }
 }
 
-async function _getShuttleSponsor(formattedAddress: string): Promise<Array<object>> {
+async function _getSponsorShuttle(formattedAddress: string): Promise<Array<object>> {
     try {
         const querySnapshot = await admin.firestore().collection('providers')
             .where('addresses', "array-contains-any", getAddressesQueryArray(formattedAddress))
-            .where('providerType', '==', 'shuttleSponsor')
+            .where('providerType', '==', 'sponsorShuttle')
             .get();
         return getProvidersFromJson(querySnapshot);
     } catch (e) {
@@ -168,8 +173,6 @@ async function _getSponsors(formattedAddress: string): Promise<Array<object>> {
 
 async function _getTaxis(formattedAddress: string): Promise<Array<object>> {
     try {
-        console.log('get the call');
-        console.log(formattedAddress);
         const querySnapshot = await admin.firestore().collection('providers')
             .where('addresses', "array-contains-any", getAddressesQueryArray(formattedAddress))
             .where('providerType', '==', 'taxi')

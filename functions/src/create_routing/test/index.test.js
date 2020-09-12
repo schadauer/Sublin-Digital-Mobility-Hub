@@ -3,6 +3,16 @@ const { expect } = require('chai');
 var test = (test, delimiter, data) => {
     const { firestore } = require('firebase-admin');
     const assert = require('chai').assert;
+    const beforeRequest = {
+        startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
+        startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__12',
+        endId: 'ChIJL2dh39E0ckcRJrcj74AXr_k',
+        endAddress: '__COU__AT__CIT__Seitenstetten__STR__Peter-Lisec-Straße__COM__LISEC Austria GmbH',
+        checkAddress: false,
+    };
+    const defaultCityAddress = '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24';
+    const lisecAddressSponsorShuttle = '__COU__AT__CIT__Seitenstetten__STR__Peter-Lisec-Straße__COM__LISEC Austria GmbH';
+    const stiftAddressShuttle = '__COU__AT__CIT__Seitenstetten__STR__Am Klosterberg__COM__Stift Seitenstetten';
 
     describe('Cloud Functions', () => {
         let myFunctions;
@@ -10,17 +20,18 @@ var test = (test, delimiter, data) => {
             myFunctions = require('../../../lib/index.js');
             const sponsor = 'sponsor';
             const taxi = 'taxi';
-
             eval(data.setUserSeitenstetten);
+            eval(data.setUserBiberbach);
             eval(data.setUserLisecAllSeitenstetten);
             eval(data.setUserTaxiSeitenstetten);
             eval(data.setUserSponsorAllSeitenstetten);
             eval(data.setUserStiftSeitenstettenSeitenstetten);
+            eval(data.setUserDasGoldBergHofgasteein);
             eval(data.setProviderGemeindeSeitenstetten);
             eval(data.setProviderTaxiSeitenstetten);
             eval(data.setProviderLisecEmailOnlySeitenstetten);
             eval(data.setProviderStiftSeitenstetten);
-
+            eval(data.setProviderDasGoldbergHofgastein);
         });
 
         after(() => {
@@ -28,23 +39,16 @@ var test = (test, delimiter, data) => {
             test.done;
             test.cleanup();
         });
+        // We Test User Seitenstetten - to Lisec - emailOnly - sponsorShuttle
         describe('createRoute', async () => {
-            it('should find and write a route to the routing collection', async () => {
+            it('should find a route for User Seitenstten because he is set as target group', async () => {
                 const wrapped = test.wrap(myFunctions.createRouting);
-                await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').set({
-                    startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
-                    startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__12',
-                    endId: 'ChIJL2dh39E0ckcRJrcj74AXr_k',
-                    endAddress: '__COU__AT__CIT__Seitenstetten__STR__Peter-Lisec-Straße__COM__LISEC Austria GmbH',
-                    checkAddress: false,
-                });
+                await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').set(beforeRequest);
                 const beforeSnap = await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get();
                 await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').set({
                     checkAddress: false,
-                    startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
-                    startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
-                    endId: 'ChIJL2dh39E0ckcRJrcj74AXr_k',
-                    endAddress: '__COU__AT__CIT__Seitenstetten__STR__Peter-Lisec-Straße__COM__LISEC Austria GmbH',
+                    startAddress: defaultCityAddress,
+                    endAddress: '__COU__AT__CIT__Seitenstetten__STR__Steyrer Straße',
                 });
                 const afterSnap = await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get();
                 const dataRequests = test.makeChange(beforeSnap, afterSnap);
@@ -54,30 +58,44 @@ var test = (test, delimiter, data) => {
                     }
                 }).then(async () => {
                     return firestore().collection('routings').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get().then((doc) => {
-                        return assert.equal(doc.data()['endAddress'], '__COU__AT__CIT__Seitenstetten__STR__Peter-Lisec-Straße__COM__LISEC Austria GmbH');
+                        return assert.equal(doc.data()['status'], 'active');
                     });
                 });
             });
         });
-
-        describe('createCheckRoute', async () => {
-            it('should find and write a route to the routing collection', async () => {
+        describe('createRoute', async () => {
+            it('should NOT a route for User Seitenstten because User is not part of the target group', async () => {
                 const wrapped = test.wrap(myFunctions.createRouting);
-                await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').set({
+                await firestore().collection('requests').doc('2MGuqfYn6NVx555UpsJ08EqFqJN2').set(beforeRequest);
+                const beforeSnap = await firestore().collection('requests').doc('2MGuqfYn6NVx555UpsJ08EqFqJN2').get();
+                await firestore().collection('requests').doc('2MGuqfYn6NVx555UpsJ08EqFqJN2').set({
                     checkAddress: false,
-                    startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
-                    startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__12',
-                    endId: 'ChIJL2dh39E0ckcRJrcj74AXr_k',
-                    endAddress: '__COU__AT__CIT__Seitenstetten__STR__Peter-Lisec-Straße__COM__LISEC Austria GmbH',
+                    startAddress: defaultCityAddress,
+                    endAddress: lisecAddressSponsorShuttle,
                 });
+                const afterSnap = await firestore().collection('requests').doc('2MGuqfYn6NVx555UpsJ08EqFqJN2').get();
+                const dataRequests = test.makeChange(beforeSnap, afterSnap);
+                return await wrapped(dataRequests, {
+                    params: {
+                        userId: '2MGuqfYn6NVx555UpsJ08EqFqJN2'
+                    }
+                }).then(async () => {
+                    return firestore().collection('routings').doc('2MGuqfYn6NVx555UpsJ08EqFqJN2').get().then((doc) => {
+                        return assert.equal(doc.data()['status'], 'unavailable');
+                    });
+                });
+            });
+        });
+        // We Test User Seitenstetten - to Stift Seitenstettten - all - Shuttle
+        describe('createRoute', async () => {
+            it('should find a route for User Seitenstten because he is set as target group', async () => {
+                const wrapped = test.wrap(myFunctions.createRouting);
+                await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').set(beforeRequest);
                 const beforeSnap = await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get();
                 await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').set({
-                    checkAddress: true,
-                    startId: 'ChIJRQJUCdapbUcRIwZCXrOBLow',
-                    startAddress: '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24',
-                    endId: 'ChIJL2dh39E0ckcRJrcj74AXr_k',
-                    endAddress: '__COU__AT__CIT__Seitenstetten__STR__Marktplatz__COM__Christiana Wieser',
-
+                    checkAddress: false,
+                    startAddress: defaultCityAddress,
+                    endAddress: stiftAddressShuttle,
                 });
                 const afterSnap = await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get();
                 const dataRequests = test.makeChange(beforeSnap, afterSnap);
@@ -86,8 +104,78 @@ var test = (test, delimiter, data) => {
                         userId: 'YOxqioCO5LTSEWXqnN2Gnm6obvH3'
                     }
                 }).then(async () => {
-                    return firestore().collection('check').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get().then((doc) => {
-                        return assert.equal(doc.data()['endAddressAvailable'], true);
+                    return firestore().collection('routings').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get().then((doc) => {
+                        return assert.equal(doc.data()['status'], 'active');
+                    });
+                });
+            });
+        });
+        // We Test User Seitenstetten - Gemeinde Seitenstetten - all - Sponsor
+        describe('createRoute', async () => {
+            it('should find a route to Waidhofner Straße for User Seitenstten because no target group is needed for private addresses', async () => {
+                const wrapped = test.wrap(myFunctions.createRouting);
+                await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').set(beforeRequest);
+                const beforeSnap = await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get();
+                await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').set({
+                    checkAddress: false,
+                    startAddress: defaultCityAddress,
+                    endAddress: '__COU__AT__CIT__Seitenstetten__STR__Waidhofner',
+                });
+                const afterSnap = await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get();
+                const dataRequests = test.makeChange(beforeSnap, afterSnap);
+                return await wrapped(dataRequests, {
+                    params: {
+                        userId: 'YOxqioCO5LTSEWXqnN2Gnm6obvH3'
+                    }
+                }).then(async () => {
+                    return firestore().collection('routings').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get().then((doc) => {
+                        return assert.equal(doc.data()['status'], 'active');
+                    });
+                });
+            });
+        });
+        describe('createRoute', async () => {
+            it('should find a route to Das Goldberg for User Seitenstten because the right target group is set', async () => {
+                const wrapped = test.wrap(myFunctions.createRouting);
+                await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').set(beforeRequest);
+                const beforeSnap = await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get();
+                await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').set({
+                    checkAddress: false,
+                    startAddress: defaultCityAddress,
+                    endAddress: '__COU__AT__CIT__Bad Hofgastein__STR__Haltestellenweg__COM__DAS.GOLDBERG',
+                });
+                const afterSnap = await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get();
+                const dataRequests = test.makeChange(beforeSnap, afterSnap);
+                return await wrapped(dataRequests, {
+                    params: {
+                        userId: 'YOxqioCO5LTSEWXqnN2Gnm6obvH3'
+                    }
+                }).then(async () => {
+                    return firestore().collection('routings').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get().then((doc) => {
+                        return assert.equal(doc.data()['status'], 'active');
+                    });
+                });
+            });
+        });
+        describe('createRoute', async () => {
+            it('should find NOT a route to Das Goldberg for User2 Seitenstten because the wrong target group is set', async () => {
+                const wrapped = test.wrap(myFunctions.createRouting);
+                await firestore().collection('requests').doc('2MGuqfYn6NVx555UpsJ08EqFqJN2').set(beforeRequest);
+                const beforeSnap = await firestore().collection('requests').doc('2MGuqfYn6NVx555UpsJ08EqFqJN2').get();
+                await firestore().collection('requests').doc('2MGuqfYn6NVx555UpsJ08EqFqJN2').set({
+                    checkAddress: false,
+                    startAddress: defaultCityAddress,
+                    endAddress: '__COU__AT__CIT__Bad Hofgastein__STR__Haltestellenweg__COM__DAS.GOLDBERG',
+                });
+                const afterSnap = await firestore().collection('requests').doc('2MGuqfYn6NVx555UpsJ08EqFqJN2').get();
+                const dataRequests = test.makeChange(beforeSnap, afterSnap);
+                return await wrapped(dataRequests, {
+                    params: {
+                        userId: '2MGuqfYn6NVx555UpsJ08EqFqJN2'
+                    }
+                }).then(async () => {
+                    return firestore().collection('routings').doc('2MGuqfYn6NVx555UpsJ08EqFqJN2').get().then((doc) => {
+                        return assert.equal(doc.data()['status'], 'unavailable');
                     });
                 });
             });
