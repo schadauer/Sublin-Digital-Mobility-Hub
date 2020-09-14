@@ -33,6 +33,7 @@ export async function getSteps(
                         startTime: value[i]['transit_details']['departure_time']['value'],
                         endTime: value[i]['transit_details']['arrival_time']['value'],
                         providerName: value[i]['transit_details']['line']['agencies'][0]['name'],
+                        lineName: value[i]['transit_details']['line']['short_name'],
                         travelMode: value[i]['travel_mode'],
                         // lineName: value['transit_details']['line']['short_name'] !== 'undefined' ? value['transit_details']['line']['short_name'] : '',
                     });
@@ -46,6 +47,7 @@ export async function getSteps(
                             startTime: address.data.routes[0]['legs'][0]['departure_time']['value'],
                             endTime: value[i + 1]['transit_details']['arrival_time']['value'],
                             providerName: '',
+                            lineName: '',
                             distance: value[i]['distance']['value'],
                             duration: value[i]['duration']['value'],
                             travelMode: value[i]['travel_mode'],
@@ -57,6 +59,7 @@ export async function getSteps(
                             endTime: address.data.routes[0]['legs'][0]['arrival_time']['value'],
                             startTime: value[i - 1]['transit_details']['departure_time']['value'],
                             providerName: '',
+                            lineName: '',
                             distance: value[i]['distance']['value'],
                             duration: value[i]['duration']['value'],
                             travelMode: value[i]['travel_mode'],
