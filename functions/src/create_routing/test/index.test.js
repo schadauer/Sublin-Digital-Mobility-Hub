@@ -10,7 +10,7 @@ var test = (test, delimiter, data) => {
         endAddress: '__COU__AT__CIT__Seitenstetten__STR__Peter-Lisec-Straße__COM__LISEC Austria GmbH',
         checkAddress: false,
     };
-    const defaultCityAddress = '__COU__AT__CIT__Wien__STR__Viktorgasse__NUM__24';
+    const defaultCityAddress = '__COU__AT__CIT__Wien__STR__Meidlinger Hauptstraße__NUM__10';
     const lisecAddressSponsorShuttle = '__COU__AT__CIT__Seitenstetten__STR__Peter-Lisec-Straße__COM__LISEC Austria GmbH';
     const stiftAddressShuttle = '__COU__AT__CIT__Seitenstetten__STR__Am Klosterberg__COM__Stift Seitenstetten';
 

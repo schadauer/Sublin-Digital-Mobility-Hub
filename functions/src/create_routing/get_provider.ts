@@ -89,7 +89,8 @@ export async function getProvider(formattedAddress: string, userId: string, chec
             if (selectedProvider !== null && selectedProvider['providerType'] === 'sponsor' || selectedProvider !== null && selectedProvider['providerType'] === 'sponsorShuttle') {
                 const sponsor = selectedProvider;
                 selectedProvider = await _getTaxiAsPartner(selectedProvider['partners'][0]);
-                if (selectedProvider !== null)
+                // We check if a taxi exists and if it has the UID in the partners list
+                if (selectedProvider !== null && selectedProvider['partners'].includes(selectedProvider['uid']))
                     selectedProvider['sponsor'] = sponsor;
             }
             if (selectedProvider !== null)
