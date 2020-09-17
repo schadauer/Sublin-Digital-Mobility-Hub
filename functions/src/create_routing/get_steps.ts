@@ -28,13 +28,13 @@ export async function getSteps(
                 const value = address.data.routes[0]['legs'][0]['steps'];
                 if (value[i]['transit_details'] /*&& value['travel_mode'] !== 'WALKING'*/) {
                     route.push({
-                        startAddress: value[i]['transit_details']['departure_stop']['name'],
-                        endAddress: value[i]['transit_details']['arrival_stop']['name'],
-                        startTime: value[i]['transit_details']['departure_time']['value'],
-                        endTime: value[i]['transit_details']['arrival_time']['value'],
-                        providerName: value[i]['transit_details']['line']['agencies'][0]['name'],
-                        lineName: value[i]['transit_details']['line']['short_name'],
-                        travelMode: value[i]['travel_mode'],
+                        startAddress: value[i]['transit_details']['departure_stop']['name'] ?? '',
+                        endAddress: value[i]['transit_details']['arrival_stop']['name'] ?? '',
+                        startTime: value[i]['transit_details']['departure_time']['value'] ?? '',
+                        endTime: value[i]['transit_details']['arrival_time']['value'] ?? '',
+                        providerName: value[i]['transit_details']['line']['agencies'][0]['name'] ?? '',
+                        lineName: value[i]['transit_details']['line']['short_name'] ?? '',
+                        travelMode: value[i]['travel_mode'] ?? '',
                         // lineName: value['transit_details']['line']['short_name'] !== 'undefined' ? value['transit_details']['line']['short_name'] : '',
                     });
                 }
@@ -42,27 +42,27 @@ export async function getSteps(
                     // If this is the beginning of the route
                     if (i == 0) {
                         route.push({
-                            startAddress: address.data.routes[0]['legs'][0]['start_address'],
-                            endAddress: value[i + 1]['transit_details']['departure_stop']['name'],
-                            startTime: address.data.routes[0]['legs'][0]['departure_time']['value'],
-                            endTime: value[i + 1]['transit_details']['arrival_time']['value'],
+                            startAddress: address.data.routes[0]['legs'][0]['start_address'] ?? '',
+                            endAddress: value[i + 1]['transit_details']['departure_stop']['name'] ?? '',
+                            startTime: address.data.routes[0]['legs'][0]['departure_time']['value'] ?? '',
+                            endTime: value[i + 1]['transit_details']['arrival_time']['value'] ?? '',
                             providerName: '',
                             lineName: '',
-                            distance: value[i]['distance']['value'],
-                            duration: value[i]['duration']['value'],
-                            travelMode: value[i]['travel_mode'],
+                            distance: value[i]['distance']['value'] ?? '',
+                            duration: value[i]['duration']['value'] ?? '',
+                            travelMode: value[i]['travel_mode'] ?? '',
                         });
                     } else {
                         route.push({
-                            endAddress: address.data.routes[0]['legs'][0]['end_address'],
-                            startAddress: value[i - 1]['transit_details']['arrival_stop']['name'],
-                            endTime: address.data.routes[0]['legs'][0]['arrival_time']['value'],
-                            startTime: value[i - 1]['transit_details']['departure_time']['value'],
+                            endAddress: address.data.routes[0]['legs'][0]['end_address'] ?? '',
+                            startAddress: value[i - 1]['transit_details']['arrival_stop']['name'] ?? '',
+                            endTime: address.data.routes[0]['legs'][0]['arrival_time']['value'] ?? '',
+                            startTime: value[i - 1]['transit_details']['departure_time']['value'] ?? '',
                             providerName: '',
                             lineName: '',
-                            distance: value[i]['distance']['value'],
-                            duration: value[i]['duration']['value'],
-                            travelMode: value[i]['travel_mode'],
+                            distance: value[i]['distance']['value'] ?? '',
+                            duration: value[i]['duration']['value'] ?? '',
+                            travelMode: value[i]['travel_mode'] ?? '',
                         });
                     }
                 }
@@ -83,8 +83,8 @@ export async function getSteps(
                 // endAddress: address.data.routes[0]['legs'][0]['end_address'],
                 startAddress: startAddress,
                 endAddress: endAddress,
-                duration: address.data.routes[0]['legs'][0]['duration']['value'],
-                distance: address.data.routes[0]['legs'][0]['distance']['value'],
+                duration: address.data.routes[0]['legs'][0]['duration']['value'] ?? '',
+                distance: address.data.routes[0]['legs'][0]['distance']['value'] ?? '',
                 startTime: startTime,
                 endTime: endTime + address.data.routes[0]['legs'][0]['duration']['value'] + 300,
                 provider,

@@ -7,6 +7,12 @@ export async function writeCompletedBooking(sublinStartStep: Map<any, any> | {},
                 sublinEndStep,
                 userId,
             });
+            if (sublinEndStep['sponsor'] !== undefined && sublinEndStep['sponsor'] != null && sublinEndStep['sponsor']['id'] != null) {
+                await admin.firestore().collection('bookings').doc(sublinEndStep['sponsor']['id']).collection('completed').doc(bookingId).set({
+                    sublinEndStep,
+                    userId,
+                });
+            }
             await admin.firestore().collection('routings').doc(userId).set({
                 sublinEndStep,
             }, { merge: true });
@@ -17,6 +23,12 @@ export async function writeCompletedBooking(sublinStartStep: Map<any, any> | {},
                 sublinStartStep,
                 userId,
             });
+            if (sublinStartStep['sponsor'] !== undefined && sublinStartStep['sponsor'] != null && sublinStartStep['sponsor']['id'] != null) {
+                await admin.firestore().collection('bookings').doc(sublinStartStep['sponsor']['id']).collection('completed').doc(bookingId).set({
+                    sublinEndStep,
+                    userId,
+                });
+            }
             await admin.firestore().collection('routings').doc(userId).set({
                 sublinStartStep,
             }, { merge: true });

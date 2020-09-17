@@ -5,9 +5,8 @@ import { getProvider } from './get_provider';
 import { getSteps } from './get_steps';
 import { writeRoute } from './write_route';
 // import { getAddressDetails, AddressDetails } from './get_address_details';
-import { STATION } from '../types/delimiter';
-import { getPartOfFormattedAddress } from '../utils/get_part_of_formatted_address';
 import { isPubliclyAccessible } from './is_publicly_accessible';
+import { getStationFormattedAddress } from '../utils/get_station_formatted_address';
 
 // For test data --- Begin ---
 
@@ -51,10 +50,15 @@ export const createRouting = functions
                     // Needs refactoring:
                     // if multiple providers are available with multiple stations
                     if (providerForStartAddress.length) {
-                        stationForStartAddress = getPartOfFormattedAddress(providerForStartAddress[0]['stations'][0], STATION);
+                        stationForStartAddress = getStationFormattedAddress(providerForStartAddress[0]['stations'][0]);
+                        // stationForStartAddress = providerForStartAddress[0]['stations'][0];
+                        console.log(stationForStartAddress);
+
                     }
                     if (providerForEndAddress.length) {
-                        stationForEndAddress = getPartOfFormattedAddress(providerForEndAddress[0]['stations'][0], STATION);
+                        stationForEndAddress = getStationFormattedAddress(providerForEndAddress[0]['stations'][0]);
+                        // stationForEndAddress = providerForEndAddress[0]['stations'][0];
+                        console.log(stationForEndAddress);
                     }
 
                     // If Sublin is only required for the the beginning of the trip

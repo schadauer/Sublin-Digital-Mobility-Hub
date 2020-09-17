@@ -24,7 +24,6 @@ export const createCompletedBooking = functions
                     sublinStartStep = after.sublinStartStep;
                     sublinStartStep.completedTime = Date.now();
                 }
-
                 await writeCompletedBooking(sublinStartStep, sublinEndStep, after, context.params.providerId, context.params.userId, after.bookingId);
             }
         } catch (e) {

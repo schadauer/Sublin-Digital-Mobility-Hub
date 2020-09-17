@@ -86,12 +86,18 @@ export async function getProvider(formattedAddress: string, userId: string, chec
 
             // Now we need to get the taxi provider for the sponsors
             // and we need to check if the taxi has approved of the relationship in target group
-            if (selectedProvider !== null && selectedProvider['providerType'] === 'sponsor' || selectedProvider !== null && selectedProvider['providerType'] === 'sponsorShuttle') {
+            if ((selectedProvider !== null && selectedProvider['providerType'] === 'sponsor') || (selectedProvider !== null && selectedProvider['providerType'] === 'sponsorShuttle')) {
                 const sponsor = selectedProvider;
-                selectedProvider = await _getTaxiAsPartner(selectedProvider['partners'][0]);
+                const selectedProviderTemp = await _getTaxiAsPartner(selectedProvider['partners'][0]);
+
                 // We check if a taxi exists and if it has the UID in the partners list
-                if (selectedProvider !== null && selectedProvider['partners'].includes(selectedProvider['uid']))
-                    selectedProvider['sponsor'] = sponsor;
+                if (selectedProviderTemp !== null && selectedProviderTemp['partners'].includes(sponsor['id'])) {
+                    selectedProvider = selectedProviderTemp;
+                    if (selectedProvider !== null)
+                        selectedProvider['sponsor'] = sponsor;
+                } else
+                    selectedProvider = null;
+
             }
             if (selectedProvider !== null)
                 selectedProviders = [selectedProvider];
