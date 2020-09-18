@@ -9,6 +9,7 @@ export async function getSteps(
     startTime: number | null = 0,
     endTime: number | null = 0,
     provider: object,
+    userName: string,
 ): Promise<any> {
     const route = new Array;
     try {
@@ -87,6 +88,7 @@ export async function getSteps(
                 distance: address.data.routes[0]['legs'][0]['distance']['value'] ?? '',
                 startTime: startTime,
                 endTime: endTime + address.data.routes[0]['legs'][0]['duration']['value'] + 300,
+                userName,
                 provider,
                 sponsor: provider['sponsor'] ?? null,
             })

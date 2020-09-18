@@ -26,7 +26,6 @@ export const confirmedPartnership = functions
                     }
                 }
                 if (after['partners'].length < before['partners'].length) {
-                    console.log('asdfasfd');
                     const beforePartners: Array<string> = before['partners'];
                     const oldPartners = beforePartners.filter(partner => {
                         return after['partners'].includes(partner) === false;

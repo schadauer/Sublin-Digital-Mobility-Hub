@@ -4,7 +4,7 @@ import * as functions from 'firebase-functions';
 import { getProvider } from './get_provider';
 import { getSteps } from './get_steps';
 import { writeRoute } from './write_route';
-// import { getAddressDetails, AddressDetails } from './get_address_details';
+import { getUserName } from './get_user_name';
 import { isPubliclyAccessible } from './is_publicly_accessible';
 import { getStationFormattedAddress } from '../utils/get_station_formatted_address';
 
@@ -47,23 +47,22 @@ export const createRouting = functions
                 let startTimeForEndAddress: number;
                 // If a provider is available
                 if (providerForEndAddress.length || providerForStartAddress.length) {
+
+                    // We need to get the user data 
+                    const userName = await getUserName(context.params.userId);
+
                     // Needs refactoring:
                     // if multiple providers are available with multiple stations
                     if (providerForStartAddress.length) {
                         stationForStartAddress = getStationFormattedAddress(providerForStartAddress[0]['stations'][0]);
-                        // stationForStartAddress = providerForStartAddress[0]['stations'][0];
-                        console.log(stationForStartAddress);
-
                     }
                     if (providerForEndAddress.length) {
                         stationForEndAddress = getStationFormattedAddress(providerForEndAddress[0]['stations'][0]);
                         // stationForEndAddress = providerForEndAddress[0]['stations'][0];
-                        console.log(stationForEndAddress);
                     }
 
                     // If Sublin is only required for the the beginning of the trip
                     if (providerForStartAddress.length && !providerForEndAddress.length) {
-                        console.log('Sublin Start Address only');
                         // Get route from startAddress to station
                         publicSteps = await getSteps(
                             stationForStartAddress,
@@ -72,6 +71,7 @@ export const createRouting = functions
                             null,
                             null,
                             providerForStartAddress[0],
+                            userName,
                         );
                         // Add 10 Minutes to the pickup time 
                         startTimeForStartAddress = providerForStartAddress.length !== 0 ? publicSteps[0]['startTime'] : 0;
@@ -82,12 +82,12 @@ export const createRouting = functions
                             startTimeForStartAddress,
                             startTimeForStartAddress,
                             providerForStartAddress[0],
+                            userName,
                         );
                     }
 
                     // If Sublin is only required for the end of the trip
                     if (providerForEndAddress.length && !providerForStartAddress.length) {
-                        console.log('Sublin End Address');
                         // Get route from startAddress to station
                         publicSteps = await getSteps(
                             data['startAddress'],
@@ -96,6 +96,7 @@ export const createRouting = functions
                             null,
                             null,
                             providerForEndAddress[0],
+                            userName,
                         );
                         startTimeForEndAddress = providerForEndAddress.length !== 0 ? publicSteps[publicSteps.length - 1]['endTime'] : 0;
                         // Write it to /routings in the database
@@ -106,11 +107,10 @@ export const createRouting = functions
                             startTimeForEndAddress,
                             startTimeForEndAddress,
                             providerForEndAddress[0],
+                            userName,
                         );
                     }
                     if (providerForEndAddress.length && providerForStartAddress.length) {
-
-                        console.log('Sublin Start Address and End Address');
                         // Get route from startAddress to station
                         publicSteps = await getSteps(
                             stationForStartAddress,
@@ -119,6 +119,7 @@ export const createRouting = functions
                             null,
                             null,
                             providerForEndAddress[0],
+                            userName,
                         );
                         // Add 10 minutes to the pickup time
                         startTimeForStartAddress = providerForStartAddress.length !== 0 ? publicSteps[0]['startTime'] : 0;
@@ -130,6 +131,7 @@ export const createRouting = functions
                             startTimeForStartAddress,
                             startTimeForStartAddress,
                             providerForStartAddress[0],
+                            userName,
                         );
                         startTimeForEndAddress = providerForEndAddress.length !== 0 ? publicSteps[publicSteps.length - 1]['endTime'] : 0;
                         sublinEndStep = await getSteps(
@@ -139,6 +141,7 @@ export const createRouting = functions
                             startTimeForEndAddress,
                             startTimeForEndAddress,
                             providerForEndAddress[0],
+                            userName,
                         );
                     }
 
