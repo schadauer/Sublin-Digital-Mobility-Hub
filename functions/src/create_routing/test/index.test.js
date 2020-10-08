@@ -48,8 +48,8 @@ var test = (test, delimiter, data) => {
                 const beforeSnap = await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get();
                 await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').set({
                     checkAddress: false,
-                    startAddress: defaultCityAddress,
-                    endAddress: '__COU__AT__CIT__Seitenstetten__STR__Steyrer Straße',
+                    startAddress: '__COU__AT__CIT__Seitenstetten__STR__Steyrer Straße',
+                    endAddress: defaultCityAddress,
                 });
                 const afterSnap = await firestore().collection('requests').doc('YOxqioCO5LTSEWXqnN2Gnm6obvH3').get();
                 const dataRequests = test.makeChange(beforeSnap, afterSnap);

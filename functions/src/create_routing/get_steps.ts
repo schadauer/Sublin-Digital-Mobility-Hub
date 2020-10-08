@@ -6,7 +6,7 @@ export async function getSteps(
     startAddress: string,
     endAddress: string,
     mode: string,
-    startTime: number | null = 0,
+    startTime: number = Date.now(),
     endTime: number | null = 0,
     provider: object,
     userName: string,
@@ -18,11 +18,12 @@ export async function getSteps(
                 origin: startAddress,
                 destination: endAddress,
                 mode: mode,
-                // transit_mode: mode === 'transit' ? 'train|tram|subway|bus' : 'driving',
+                departure_time: startTime,
                 language: 'de',
                 key: DIRECTIONS_KEY
             }
         })
+
         if (mode === 'transit' && address.data) {
             // address.data.routes[0]['legs'][0]['steps'].map((value: any) => {
             for (var i = 0; i < address.data.routes[0]['legs'][0]['steps'].length; i++) {
@@ -69,8 +70,6 @@ export async function getSteps(
                 }
 
             }
-            // }
-            // )
         } else if (mode === 'driving' && address.data) {
             route.push({
                 confirmed: false,
@@ -87,7 +86,7 @@ export async function getSteps(
                 duration: address.data.routes[0]['legs'][0]['duration']['value'] ?? '',
                 distance: address.data.routes[0]['legs'][0]['distance']['value'] ?? '',
                 startTime: startTime,
-                endTime: endTime + address.data.routes[0]['legs'][0]['duration']['value'] + 300,
+                endTime: endTime + address.data.routes[0]['legs'][0]['duration']['value'],
                 userName,
                 provider,
                 sponsor: provider['sponsor'] ?? null,

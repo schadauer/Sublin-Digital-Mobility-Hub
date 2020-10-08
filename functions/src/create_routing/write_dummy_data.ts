@@ -20,7 +20,7 @@ export async function writeDummyData(): Promise<void> {
                 isProfileComplete: false,
                 isProvider: true,
                 targetGroup: ['andreas@simpledesign.io'],
-                requestedAddresses: [],
+                addresses: [],
                 secondNmae: '',
             });
             await admin.firestore().collection('providers').doc(sponsor).set({
@@ -90,7 +90,7 @@ export async function writeDummyData(): Promise<void> {
                 isProfileComplete: false,
                 isProvider: true,
                 targetGroup: ['andreas@simpledesign.io'],
-                requestedAddresses: [],
+                addresses: [],
                 secondNmae: '',
             });
             await admin.firestore().collection('providers').doc(shuttle + 'Hausmening').set({
@@ -142,7 +142,7 @@ export async function writeDummyData(): Promise<void> {
                 isProfileComplete: false,
                 isProvider: true,
                 targetGroup: ['andreas@simpledesign.io'],
-                requestedAddresses: [],
+                addresses: [],
                 secondNmae: '',
             });
             await admin.firestore().collection('providers').doc(sponsor + 'GemeindeSeitenstettenEmailOnly').set({
@@ -166,7 +166,7 @@ export async function writeDummyData(): Promise<void> {
                 homeAddress: 'Viktorgasse',
                 isProfileComplete: false,
                 isProvider: true,
-                requestedAddresses: [],
+                addresses: [],
                 secondNmae: '',
             });
             await admin.firestore().collection('users').doc(user + 'toLisecWrongTargetGroup').set({
@@ -175,7 +175,7 @@ export async function writeDummyData(): Promise<void> {
                 homeAddress: 'Viktorgasse',
                 isProfileComplete: false,
                 isProvider: true,
-                requestedAddresses: [],
+                addresses: [],
                 secondNmae: '',
             });
             await admin.firestore().collection('users').doc(user + 'toLisecHausmeningWrongTargetGroup').set({
@@ -184,7 +184,7 @@ export async function writeDummyData(): Promise<void> {
                 homeAddress: 'Viktorgasse',
                 isProfileComplete: false,
                 isProvider: true,
-                requestedAddresses: [],
+                addresses: [],
                 secondNmae: '',
             });
             await admin.firestore().collection('users').doc(user + 'toLisecHausmeningRightTargetGroup').set({
@@ -193,7 +193,7 @@ export async function writeDummyData(): Promise<void> {
                 homeAddress: 'Viktorgasse',
                 isProfileComplete: false,
                 isProvider: true,
-                requestedAddresses: [],
+                addresses: [],
                 secondNmae: '',
             });
             await admin.firestore().collection('users').doc(user + 'toStift').set({
@@ -202,7 +202,7 @@ export async function writeDummyData(): Promise<void> {
                 homeAddress: 'Viktorgasse',
                 isProfileComplete: false,
                 isProvider: true,
-                requestedAddresses: [],
+                addresses: [],
                 secondNmae: '',
             });
             await admin.firestore().collection('users').doc(user + 'fromStifttoVienna').set({
@@ -211,7 +211,7 @@ export async function writeDummyData(): Promise<void> {
                 homeAddress: 'Viktorgasse',
                 isProfileComplete: false,
                 isProvider: true,
-                requestedAddresses: [],
+                addresses: [],
                 secondNmae: '',
             });
             await admin.firestore().collection('users').doc(user + 'toWaidhofnerStrasse6').set({
@@ -220,7 +220,7 @@ export async function writeDummyData(): Promise<void> {
                 homeAddress: 'Viktorgasse',
                 isProfileComplete: false,
                 isProvider: true,
-                requestedAddresses: [],
+                addresses: [],
                 secondNmae: '',
             });
             await admin.firestore().collection('users').doc(user + 'fromWaidhofnerStrasse6toGoldberg').set({
@@ -229,7 +229,7 @@ export async function writeDummyData(): Promise<void> {
                 homeAddress: 'VSeitenstetten',
                 isProfileComplete: false,
                 isProvider: true,
-                requestedAddresses: [],
+                addresses: [],
                 secondNmae: '',
             });
 

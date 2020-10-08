@@ -25,7 +25,7 @@ export async function writeCompletedBooking(sublinStartStep: Map<any, any> | {},
             });
             if (sublinStartStep['sponsor'] !== undefined && sublinStartStep['sponsor'] != null && sublinStartStep['sponsor']['id'] != null) {
                 await admin.firestore().collection('bookings').doc(sublinStartStep['sponsor']['id']).collection('completed').doc(bookingId).set({
-                    sublinEndStep,
+                    sublinStartStep,
                     userId,
                 });
             }
