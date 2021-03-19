@@ -1,6 +1,8 @@
+import * as functions from 'firebase-functions';
 import axios from 'axios';
+const config = functions.config();
 
-const PLACE_KEY = 'AIzaSyDIq5WwJZUG-b_UKlOGaLl4532A9XxY8Lw';
+const PLACE_KEY = config.sublin.google_places_api;
 
 interface PlaceData {
     html_attributions: [];
