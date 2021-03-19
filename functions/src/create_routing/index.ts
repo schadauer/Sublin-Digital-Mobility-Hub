@@ -1,6 +1,5 @@
 import * as functions from 'firebase-functions';
 
-// import { getPlace } from './get_place';
 import { getProvider } from './get_provider';
 import { getSteps } from './get_steps';
 import { writeRoute } from './write_route';
@@ -51,10 +50,8 @@ export const createRouting = functions
                 const startTimeNow: number = Math.floor(Date.now() / 1000 + 60 * 25);
 
                 if (providerForEndAddress.length || providerForStartAddress.length) {
-
                     // We need to get the user data 
                     const userName = await getUserName(context.params.userId);
-
                     // Needs refactoring:
                     // if multiple providers are available with multiple stations
                     if (providerForStartAddress.length) {
@@ -77,7 +74,6 @@ export const createRouting = functions
                             providerForStartAddress[0],
                             userName,
                         );
-
                     }
 
                     // If Sublin is only required for the the beginning of the trip
