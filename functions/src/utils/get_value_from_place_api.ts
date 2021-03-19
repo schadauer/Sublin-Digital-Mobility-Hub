@@ -1,5 +1,3 @@
-
-
 // Todo: at the moment there is only a string being returned. If the value is an array the first value will be used
 export function getValueFromPlaceApi(addressGooglePlaceData: object, objectKey: string, searchKey: string = ''): string {
     if (objectKey !== 'address_components') {

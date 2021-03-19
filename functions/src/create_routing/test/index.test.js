@@ -36,7 +36,6 @@ var test = (test, delimiter, data) => {
         });
 
         after(() => {
-            // firestore().collection('/routings').doc('testuser').delete();
             test.done;
             test.cleanup();
         });

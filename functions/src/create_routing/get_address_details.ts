@@ -12,7 +12,6 @@ export interface AddressDetails {
 }
 
 export function getAddressDetails(addressGooglePlaceData: google.maps.Place): AddressDetails {
-
     const data: AddressDetails = {
         postcode: getValueFromPlaceApi(addressGooglePlaceData, 'address_components', 'postal_code') || '',
         street: getValueFromPlaceApi(addressGooglePlaceData, 'name') || '',

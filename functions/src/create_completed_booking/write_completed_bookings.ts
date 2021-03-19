@@ -40,9 +40,6 @@ export async function writeCompletedBooking(sublinStartStep: Map<any, any> | {},
                 ...data
             });
         }
-
-
-        // await admin.firestore().collection('routings').doc(userId).delete();
         return [];
     } catch (e) {
         console.log(e)
