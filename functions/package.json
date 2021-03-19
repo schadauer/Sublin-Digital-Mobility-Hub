@@ -12,7 +12,7 @@
     "test": "mocha --timeout 5000 --reporter spec"
   },
   "engines": {
-    "node": "8"
+    "node": "10"
   },
   "main": "lib/index.js",
   "dependencies": {
