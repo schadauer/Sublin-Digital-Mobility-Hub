@@ -1,6 +1,6 @@
 <p align="center">
-<img src="doc/img/sublin-logo-200.png">
-</p>
+<img width="200" src="doc/img/sublin-logo-black.png">
+</p></br>
 
 # Digital Mobility Hub
 
@@ -12,7 +12,7 @@ Firebase is only used as an interim solution and will be replaced by a provider 
 #####So the above is where we are and the below is where we are heading towards 🚀.
 
 
-## Digital Mobility Hub
+## Goal
 General information to the Sublin mobility hub can be found on the project website [www.sublin.dev](https://www.sublin.dev/development). The mobility hub accumulates transport operators and it makes them available via a single API to MaaS providers or other Sublin mobility hubs.
 
 The Sublin mobility hub consists of the following components:
